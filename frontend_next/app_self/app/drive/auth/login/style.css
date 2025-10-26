@@ -1,0 +1,246 @@
+:root{
+  --bg:#1f1f1f;
+  --panel:#2b2b2b;
+  --muted:#9aa0a6;
+  --accent:#7b8a94;
+  --accent-strong:#9fb0bb;
+  --success:#2ea44f;
+  --danger:#e06c75;
+  --glass: rgba(255,255,255,0.03);
+  --radius:10px;
+  font-family: Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html,body{
+  height:100%;
+  margin:0;
+  background: linear-gradient(180deg, #161616 0%, #111315 100%);
+  color: #e6e6e6;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+*{
+  user-select: none;
+}
+input, textarea {
+  user-select: text;
+}
+
+.center-wrap{
+  min-height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:2rem;
+  width: 100%;
+}
+
+.card{
+  width:100%;
+  max-width:420px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  border-radius: var(--radius);
+  padding: 1.6rem;
+  box-sizing:border-box;
+  backdrop-filter: blur(6px);
+}
+
+.brand{
+  display:flex;
+  gap:.75rem;
+  margin-bottom: .75rem;
+  align-items:flex-start !important;
+}
+
+.logo {
+  min-width:44px;
+  height:44px;
+  border-radius:8px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  color: #0f1720;
+  box-shadow: 0 6px 18px rgba(15,17,20,0.6);
+  padding: 1%;
+  margin-top: 1%;
+
+}
+
+h1 {
+  font-size:1.05rem;
+  margin:0;
+  color:#fff;
+}
+
+p.lead{
+  margin:.5rem 0 1rem 0;
+  color:var(--muted);
+  font-size:.92rem;
+}
+
+#loginForm{
+  display:flex;
+  flex-direction:column;
+  gap:.75rem;
+}
+
+label.input-label{
+  font-size:.82rem;
+  color:var(--muted);
+  display:block;
+  margin-bottom:.25rem;
+}
+
+.field{
+  display:flex;
+  align-items: center;
+  gap:.5rem;
+  background: var(--glass);
+  border: 1px solid rgba(255,255,255,0.03);
+  padding:.45rem .6rem;
+  border-radius:8px;
+}
+
+.field input{
+  flex:1;
+  background:transparent;
+  border: none;
+  outline:none;
+  color: #e8eef0;
+  font-size: .98rem;
+  padding: .35rem 0;
+}
+
+.field input::placeholder{
+  color: rgba(230,230,230,0.25);
+}
+
+.helper{
+  font-size:.8rem;
+  color:var(--muted);
+  margin-top:.25rem;
+}
+
+.row{
+  display:flex;
+  gap:.6rem;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.checkbox-label{
+  display:flex;
+  gap:.4rem;
+  align-items:center;
+  color:var(--muted);
+  font-size:.9rem;
+  cursor:pointer;
+  user-select:none;
+}
+
+input[type="checkbox"]{
+  width:16px;
+  height:16px;
+  accent-color: var(--accent-strong);
+}
+
+.btn{
+  margin-top:.5rem;
+  background: linear-gradient(180deg, var(--accent-strong), var(--accent));
+  color: #071017;
+  font-weight:700;
+  border:none;
+  padding:.6rem .9rem;
+  border-radius:8px;
+  cursor:pointer;
+  box-shadow: 0 6px 18px rgba(15,17,20,0.55);
+  transition: transform .12s ease, opacity .12s ease;
+}
+.btn:active{ transform: translateY(1px); }
+.btn:disabled{ opacity: .55; cursor: not-allowed; transform:none; }
+
+.actions{
+  display:flex;
+  gap:.6rem;
+  align-items:flex-start !important;
+  justify-content:space-between;
+  /* border:3px solid blue; */
+  width: 100%;
+}
+
+.small{
+  font-size:.82rem;
+  color:var(--muted);
+}
+
+#row2{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.error{
+  color: var(--danger);
+  font-size:.85rem;
+  margin-top: .25rem;
+}
+
+.success{
+  color: var(--success);
+  font-size:.85rem;
+  margin-top: .25rem;
+}
+
+.show-pass{
+  background:transparent;
+  border:none;
+  color:var(--muted);
+  cursor:pointer;
+  font-size:.9rem;
+  padding:.25rem;
+}
+
+footer.note{
+  margin-top:1rem;
+  text-align:center;
+  color:var(--muted);
+  font-size:.82rem;
+}
+
+button{
+  cursor: pointer;
+}
+
+
+#msg-bar{
+  max-width: 70%;
+  word-wrap: break-word;     
+  overflow-wrap: break-word;  
+  white-space: normal;   
+}
+
+
+#submitBtn{
+  margin: 0;
+}
+
+
+
+@media (max-width:420px){
+  .card{ padding:1rem; border-radius:8px; max-width: 96%;}
+  .logo{ width:40px; height:40px; }
+}
+
+
+@media(max-width:768px){
+  .center-wrap{
+    padding: 0 !important;
+  }
+}
+
