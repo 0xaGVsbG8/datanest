@@ -1,0 +1,270 @@
+
+
+body{
+    background-color: #2b2b2b;
+}
+
+*{
+    transition: all 0.2s ease-in-out;
+}
+
+#settings-tab{
+    padding: 1%;
+    top:50%;
+    left: 50%;
+    position: fixed;
+    transform: translate(-50%,-50%);
+    min-width: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: #121212;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 0px  10px 5px rgb(20, 20, 20);
+}
+
+
+#user-address-panel{
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1%;
+}
+
+#user-address-panel-close{
+    cursor: pointer;
+}
+
+
+#settings-tab-space-info{
+    width: 100%;
+    padding: 1%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#settings-tab-space-info-title{
+    width: 100%;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-self: flex-start;
+}
+
+
+#settings-tab-space-info-space{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#settings-tab-space-info-space-data{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-self: flex-start;
+}
+
+#settings-tab-space-info-space-chart{
+    border:3px solid rgb(4, 143, 185);
+    border-radius: 8px;
+    height: 1rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
+}
+
+#settings-tab-space-info-space-chart-filling{
+    background-color: rgb(32, 80, 112);
+    height: 100rem;
+}
+
+
+#settings-tab-space-info-space-info{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#settings-tab-space-info-space-info-stats{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+
+#settings-tab-space-info-space-info-stats-title{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-weight: bold;
+}
+
+#settings-tab-space-info-space-info-stats-info{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0%;
+    padding-left: 3%;
+}
+
+
+
+#settings-tab-actions{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#settings-tab-actions > div {
+    width: 100%;
+}
+
+#settings-tab-actions-title{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 1%;
+    font-weight: bold;
+}
+
+#settings-tab-actions-clean-up,#settings-tab-actions-dups, #settings-tab-actions-delete-account, #settings-tab-actions-log-out, #settings-tab-actions-change-passwd, #settings-tab-actions-go-dev{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0.3%;
+    padding-left: 3%;
+    cursor: pointer;
+}
+
+#settings-tab-assigned-job{
+    width: 100%;
+    padding: 1%;
+}
+
+#settings-tab-assigned-job div{
+    overflow: hidden;
+    white-space:nowrap;
+    background-color: #2b2b2b;
+    border-radius: 7px;
+    padding: 1%;
+    transition: all 0.6s;
+    opacity:1;
+}
+
+.settings-tab-assigned-job_show{
+    opacity: 1 !important;
+}
+
+.settings-tab-assigned-job_hide{
+    opacity: 0 !important;
+}
+
+@media(min-width:968px){
+    .settings-tab-actions-opt:hover{
+        background-color: #212121;
+        padding: 1% !important;
+    }
+}
+
+
+
+button{
+    cursor: pointer;
+}
+
+
+
+#settings-tab-actions-delete-account {
+    color: red;
+}
+#settings-tab-actions-delete-account:hover {
+    color: rgb(110, 9, 9);
+}
+
+
+#settings-tab-actions-log-out {
+    color: rgb(210, 224, 14);
+}
+#settings-tab-actions-log-out:hover{
+    color: rgb(136, 145, 15);
+}
+
+
+#settings-tab-actions-clean-up{
+    color: rgb(4, 127, 158)
+}
+#settings-tab-actions-clean-up:hover{
+    color: rgb(6, 66, 82)
+}
+
+#settings-tab-actions-dups{
+    color: rgb(4, 106, 223);
+}
+#settings-tab-actions-dups:hover{
+    color: rgb(7, 60, 121);
+}
+
+#settings-tab-actions-change-passwd{
+    color: orange;
+}
+#settings-tab-actions-change-passwd:hover{
+    color: rgb(114, 77, 10);
+}
+
+#settings-tab-actions-go-dev{
+    color: rgb(0, 183, 255)
+}
+#settings-tab-actions-go-dev:hover{
+    color: rgb(13, 100, 134)
+}
+
+
+
+
+
+@media(max-width:968px){
+    #settings-tab{
+        width: 100%;
+        padding: 1%;
+        top: 20%;
+        transform: translate(-50%,-20%);
+    }
+}
+
+
+
+.settings-tab-separator{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2%;
+}
+
+.settings-tab-separator div{
+    width: 90%;
+    background-color: gray;
+    border: 4px solid gray;
+    border-radius: 10px;
+}
+
+
+
