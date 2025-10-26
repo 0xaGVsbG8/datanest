@@ -1,0 +1,32 @@
+#quick-actions{
+    border:3px solid orange !important;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#quick-actions div{
+    cursor: pointer;
+}
+
+
+#quick-actions * {
+    padding: 1%;
+}
+
+
+.quick-actions-action{
+    padding: 1% !important;
+    padding-left: 2% !important;
+    width: 100%;
+    color: rgb(184, 180, 180);
+}
+
+
+.quick-actions-action  { 
+    cursor: pointer;
+}
+
+
+

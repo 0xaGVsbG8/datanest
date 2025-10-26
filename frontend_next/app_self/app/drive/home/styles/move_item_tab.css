@@ -1,0 +1,125 @@
+
+
+
+
+#move-items{
+    background-color: #121212;
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    min-width: 35%;
+    border-radius: 10px;
+    overflow: hidden;
+    min-height: 50dvh !important;
+    z-index: 999999 !important;
+    box-shadow: 0px 0px  10px 5px rgb(20, 20, 20);
+    z-index: 9999999999 !important;
+
+}
+
+#move-items-placeholder{
+    width: 100%;
+    height: 50dvh;
+}
+
+#move-items-title-placeholder{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#move-items-title{
+    border-bottom:3px solid gray;
+    width:90%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 2%;
+    padding-left: -0%;
+}
+
+#move-items-btns{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 3%;
+    z-index: 9999;
+}
+
+
+#cross-paths2{
+    width: 90%;
+
+}
+
+#cross-paths2 #cross-paths-ls{
+    max-height: calc(2 * 10rem) ;
+    overflow: auto;
+    justify-content: flex-start;
+}
+
+
+#move-items-btns-cancel{
+    color: rgb(12, 155, 173);
+    padding: 2%;
+}
+
+#move-items-ls{
+    padding: 3%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    height: 40dvh !important;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.move-items-ls-record{
+    border-bottom:2px solid gray;
+    width: 100%;
+    cursor: pointer;
+    transition: none;
+    height: 2rem !important;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 1%;
+}
+
+.move-items-ls-record:hover{
+    background-color: rgb(77, 71, 71);
+}
+
+
+#move-items-btns-apply{
+    background-color: rgb(9, 181, 211);
+    padding: 2%;
+    border-radius: 7px;
+    width: 5rem;
+    color:rgb(0, 89, 255)
+}
+
+#move-items-btns-apply:hover{
+    background-color: rgb(5, 96, 112);
+}
+
+
+
+@media(max-width:968px){
+    #move-items{
+        width: 100%;
+        border-radius: 0px;
+    }
+}

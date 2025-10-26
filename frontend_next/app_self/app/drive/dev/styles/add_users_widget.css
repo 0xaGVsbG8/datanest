@@ -1,0 +1,101 @@
+#add-user-widget{
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    width: 40%;
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform:translate(-50%,-50%);
+    z-index: 99999;
+    margin: 0;
+}
+
+#add-user-widget *:not(button):not(#dev-priv-label){
+    padding: 1%;
+    width: 100%;
+}
+
+
+#add-user-add-btn-placeholder-btn{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0px;
+}
+
+
+#add-user-add-btn-placeholder-btn-cancel { 
+    color: rgb(190, 13, 13);
+    background-color: transparent !important;
+}
+
+#add-user-add-btn-placeholder-btn-cancel:hover { 
+    color: rgb(85, 8, 8);
+}
+
+
+#add-user-widget *:not(:first-child){
+    padding-left: 2%;
+}
+
+
+#add-user-add-btn-placeholder{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+
+
+
+#add-user-add-btn-placeholder button{
+    background-color: hsla(197, 94%, 43%, 0.897);
+    width: 6rem;
+    height: 1.5rem;
+    border-radius: 6px;
+}
+
+#add-user-add-btn-placeholder button:hover{
+    background-color: hsla(197, 94%, 43%, 0.39);
+}
+
+
+
+
+
+#dev-priv-label{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 1%;
+    margin: 0;
+    gap: 0;
+    white-space: nowrap;
+    font-size: 110%;
+}
+
+#dev-priv-input{
+    margin: 3%;
+    cursor: pointer;
+}
+
+
+#dev-priv-input{
+    transform: scale(1.2);
+}
+
+#add-user-widget input[type='text'], input[type='password']{
+    height: 2rem;
+    border:none;
+    border-radius: 6px;
+}
+
+
+@media(max-width:968px){
+    #add-user-widget{
+        width: 98%;
+    }
+}
