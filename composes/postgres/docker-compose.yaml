@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: datanestDB_postgres
+    ports:
+      - "9003:5432"      
+    volumes:
+      - ./data:/var/lib/postgresql/data  
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgress
+      POSTGRES_DB: datanestDB

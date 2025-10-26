@@ -1,0 +1,226 @@
+
+*{
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    transition: all 0.2s ease-in-out;
+    user-select: none;
+}
+
+
+
+
+html{
+    font-size: 16px;
+}
+
+body{
+    background-color: #201f1f;
+    padding: 0;
+    margin: 0;
+}
+
+#container{
+    width: 100dvw;
+    height: 100dvh;
+    width: 90%;
+    position: absolute;
+    left: 50%;
+    transform:translate(-50%,-0%);
+}
+
+#container-panels{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+
+#container-left-panel, #container-right-panel{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#container-left-panel{
+    width: 30%;
+}
+#container-left-panel > div{
+    width: 90%;
+}
+
+
+
+#container-right-panel{
+    width: 70%;
+}
+
+
+#dev-dashboard-top-placeholder{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#dev-dashboard-top{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 95%;
+    padding: 0.5%;
+}
+
+#dev-dashboard-home-btn{
+    border-radius: 7px;
+    width: 8rem;
+    height: 3rem;
+    font-weight: bold;
+    background-color: #0c61c2;
+}
+#dev-dashboard-home-btn:hover{
+    background-color: #04274e;
+}
+
+#dev-dashboard-title{
+    color: white;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#dev-dashboard-title a{
+    font-weight: bold;
+    font-size: 120%;
+    color: wheat;
+}
+
+#dev-dashboard-title span{
+    font-size: 80%;
+    color: rgba(255, 255, 255, 0.507);
+}
+
+
+
+
+#storage-info, #quick-actions, #add-user-widget {
+    margin: 3%;
+}
+
+
+#storage-info, #quick-actions{
+    width: 30%;
+    color: white;
+}
+
+
+#storage-info{
+    color: white;
+}
+
+
+
+#storage-info-used-placeholder, #storage-info-avaible, #storage-info-storage-acc-limit, #storage-info-storage-upload-limit{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2%;
+    width: 100%;
+}
+
+#storage-info-title, #quick-actions-title, #add-user-widget-title{
+    margin: 0;
+    padding: 1%;
+    font-size: 120%;
+    font-weight: bold;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.panel-card{
+    /* border:3px solid purple !important; */
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 10px 5px rgba(7, 8, 12, 0.678);
+    /* background-color: #0d3a58; */
+    background-color: #07263a;
+    padding: 1%;
+}
+
+
+
+
+input[type='text'], input[type='password']{
+    outline: none;
+    border:2px solid gray !important;
+    height: 2.5t !important;
+}
+
+button{
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+
+@media(max-width:968px){
+    #container{
+        width: 95%;
+    }
+    #container-panels{
+        /* border:3px solid yellow; */
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    #container-left-panel, #container-left-panel > div, #container-right-panel, #user-manager{
+        width: 100%;
+    }
+
+    
+
+
+   
+
+    #dev-dashboard-top{
+        width: 100%;
+    }
+
+
+
+
+
+
+
+    
+
+
+}
+
