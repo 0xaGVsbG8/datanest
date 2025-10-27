@@ -1,0 +1,303 @@
+
+html{
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+}
+
+
+
+#all-parent{
+    user-select: none !important;
+}
+
+
+#container{
+    pointer-events:all;
+    z-index: 9999;
+}
+
+
+
+body{
+    background-color: #212121 !important;
+    overflow: auto;
+    margin: 0;
+    padding: 0;
+    overflow: hidden !important;
+    height: 100dvh;
+}
+
+
+
+button{
+    outline: none;
+}
+
+
+
+
+#all-parent{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0.5%;
+    height: 100dvh;
+    visibility: visible;
+}
+
+.hide_page{
+    opacity: 0 !important;
+}
+.show_page{
+    opacity: 1 !important;
+}
+
+
+#section-selector{
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    padding: 0.3%;
+    height: 100%;
+    left: 0;
+    background-color: #212121;
+    padding: 1%;
+    z-index: 999;
+    min-width: 15% !important;
+}
+
+#section-selector div{
+    padding: 3%;
+    cursor: pointer;
+    margin-top: 6%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#section-selector div img {
+   width: 1.5rem;
+}
+
+
+
+#section-selector div:hover{
+    background-color: gray;
+    border-radius: 10px;
+}
+
+#user-content{
+    width: 100%;
+    height: 100%;
+}
+
+
+#selection-panel{
+    display: flex;
+    height: 80dvh;
+    background-color: #212121;
+}
+
+
+
+.selected_section{
+    background-color: rgba(11, 112, 179, 0.651);
+    border-radius: 10px;
+}
+
+.selected_section:hover{
+    background-color: rgba(9, 58, 90, 0.651) !important;
+    
+}
+
+.selected_section button{
+    opacity: 1 !important; 
+}
+
+.site-icon-pic{
+    width: 2rem;
+    height: auto;
+}
+#disk-cloud-btn{
+    padding: 1%;
+    cursor: pointer;
+    font-weight: bold;
+    color: rgb(0, 183, 255);
+}
+
+
+@media(max-width:968px){
+
+    #section-selector{
+        width: 100% !important;
+        flex-direction: row;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: auto;
+        padding: 0%;
+        background-color: #2b2b2b;
+        font-weight: bold;
+    }
+
+    #section-selector div{
+        border-top:3px solid orange;
+        margin: 0%;
+        width: 25%;
+        height: 4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+    #section-selector div:first-child{
+        font-size: 80%;
+    }
+
+    .selected_section{
+        border-radius: 0px !important;
+    }
+    body, html{
+        padding: 0%;
+        overflow: hidden !important;
+    }
+    #all-parent{
+        justify-content: space-between;
+        padding: 0%;
+    }
+
+
+
+    .site-icon-pic{
+        width: 2rem;
+        height: auto;
+    }
+
+    #disk-cloud-btn{
+        display: none;
+        width: 15%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1%;
+    }
+
+    #home-sub{
+        display: none;
+    }
+
+    #data-section{
+        padding: 0 !important;
+    }
+
+    
+}
+
+
+@media (max-width: 800px) and (max-height: 600px) and (orientation: landscape){
+   *{
+        padding: 0 !important;
+        margin:  0 !important;
+   }
+
+
+
+    #all-parent{
+        justify-content: flex-start;
+        width: 100dvw;
+    }
+
+    #data-section-records{
+        min-height: 2rem !important;
+        height: 2rem !important;
+        max-height: 50rem !important;
+
+    }
+    #section-selector{
+        top: 50%;
+    }
+    .data-section-record{
+        width: 100% !important;
+    }
+
+    #selection-panel{
+        height: 16rem ;
+    }
+
+    #section-selector{
+        height: 2rem !important;
+        background-color: #212121;
+    }
+    #section-selector > div{
+        height: 2rem;
+        flex-direction: row;
+    }
+    #section-selector img{
+        width: 1rem !important;
+    }
+    #user-info-panel-actions-btn{
+        overflow: hidden;
+        height: 1.7rem !important;
+    }
+
+  
+    .data-select-option{
+        width: 5%;
+     }
+     .data-section-owner{
+        width: 10%;
+     }
+
+     #finder{
+        padding: 3% !important;
+        margin: 1 !important;
+     }
+     #disk-cloud-btn{
+        width: auto;
+     }
+     #home-panel{
+        margin-top: 0.5% !important;
+     }
+  
+}
+
+
+@media(min-width:2000px){
+    #section-selector{
+        max-width: 12% !important;
+        min-width: 12% !important;
+        padding: 0.5% !important;
+    }
+}
+
+
+
+* {
+  scrollbar-width: thin; 
+  scrollbar-color: #333 transparent; 
+}
+
+*::-webkit-scrollbar {
+  width: 6px;  
+  height: 6px;  
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #333;
+  border-radius: 10px;    
+  border: 2px solid transparent;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #555; 
+}
+
+
+
+
+
