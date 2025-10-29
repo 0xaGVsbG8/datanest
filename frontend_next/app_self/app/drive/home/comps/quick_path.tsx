@@ -27,7 +27,6 @@ const Quick_path = ({ special_id = null}:quick_path_props) => {
 
     const redirect = useCallback((path: string, token: string)=>{
         if(special_id == 1){
-            set_fetched_data(null);
             const url = `/drive/home/browse/${token}`
             router.push(url)
         }
