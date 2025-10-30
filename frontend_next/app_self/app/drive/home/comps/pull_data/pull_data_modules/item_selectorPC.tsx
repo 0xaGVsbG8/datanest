@@ -262,7 +262,7 @@ const item_selectorPC = ({
 
     
     const handle_mouse_down = (e: MouseEvent) => {
-      
+        if(window.innerWidth<900) return
         if(block_record_selector.current) return
 
         if(ctrl_a_pressed.current || ctrl_pressed.current || clicked_overall_checkbox.current.clicked){return}
