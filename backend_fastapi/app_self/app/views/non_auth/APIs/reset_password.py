@@ -1,7 +1,7 @@
 
 
-from app_independencies import router,Request, SEND_MAILS
-from fastapi import Depends, BackgroundTasks
+from fastapi import APIRouter, Depends, BackgroundTasks, Request
+from app_independencies import SEND_MAILS
 from sqlalchemy.orm import Session
 from views.models import User, passcodes_info
 from db_conn import get_db
@@ -10,6 +10,7 @@ from uuid import uuid4
 from modules import send_mail
 from pydantic import EmailStr
 
+router = APIRouter()
 
 class response:
     auth_token: uuid4

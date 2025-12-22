@@ -1,4 +1,7 @@
-from app_independencies import router,Request, __STORAGE_VAULT_PATH
+from fastapi import APIRouter, Depends, HTTPException, Request
+from app_independencies import Request, __STORAGE_VAULT_PATH
+
+router = APIRouter()
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
 from fastapi import Depends, HTTPException

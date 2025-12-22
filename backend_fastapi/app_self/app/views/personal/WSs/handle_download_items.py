@@ -1,4 +1,7 @@
-from app_independencies import app, router,Request, __STORAGE_VAULT_PATH, PREFIX, ZIP_ARCS_PATH
+from fastapi import APIRouter, Request
+from app_independencies import app, Request, __STORAGE_VAULT_PATH, PREFIX, ZIP_ARCS_PATH
+
+router = APIRouter()
 from fastapi.responses import Response, JSONResponse
 from fastapi.websockets import WebSocket, WebSocketDisconnect
 from starlette.responses import Response

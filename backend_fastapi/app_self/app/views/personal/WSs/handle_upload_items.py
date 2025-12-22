@@ -1,4 +1,6 @@
-from app_independencies import router
+from fastapi import APIRouter
+
+router = APIRouter()
 from fastapi.websockets import WebSocket, WebSocketDisconnect
 from sqlalchemy.orm import Session
 from db_conn import get_db

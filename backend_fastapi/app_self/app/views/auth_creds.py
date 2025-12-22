@@ -1,13 +1,16 @@
 
 
 
-from app_independencies import router,Request
+from fastapi import APIRouter, Request
+from app_independencies import Request
 from functools import wraps
 from db_conn import get_db
 from views.models import User
 from uuid import UUID
 from app_independencies import ALLOW_TEST_ACC_FOR_DEV_PURPOSES, TEST_ACC_FOR_DEV_PURPOSES, __STORAGE_VAULT_PATH
 import os
+
+router = APIRouter()
 
 def auth_validator(func):
     @wraps(func)

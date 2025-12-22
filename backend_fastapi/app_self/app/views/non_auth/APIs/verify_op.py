@@ -1,8 +1,6 @@
-from app_independencies import router,Request
+from fastapi import APIRouter, Depends, Query, Request
 from fastapi.responses import Response
-from starlette.responses import Response
 from sqlalchemy.orm import Session
-from fastapi import Depends, Query
 from pydantic import BaseModel
 from db_conn import get_db
 from views.models import passcodes_info, User
@@ -11,6 +9,8 @@ from typing import List, Optional
 from uuid import UUID
 import json
 import bcrypt
+
+router = APIRouter()
 
 class users_token_props(BaseModel):
     user_token: UUID

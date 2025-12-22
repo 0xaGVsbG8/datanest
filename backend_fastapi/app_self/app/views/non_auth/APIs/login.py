@@ -1,8 +1,8 @@
 
 
-from app_independencies import router, SEND_MAILS, ROOT_EMAIL, ROOT_PASSWD, ROOT_USER_ID
+from fastapi import APIRouter, Depends, BackgroundTasks, Request
 from fastapi.responses import Response
-from fastapi import Depends, BackgroundTasks, Request
+from app_independencies import SEND_MAILS, ROOT_EMAIL, ROOT_PASSWD, ROOT_USER_ID, ALLOW_TEST_ACC_FOR_DEV_PURPOSES, TEST_ACC_FOR_DEV_PURPOSES
 from sqlalchemy.orm import Session
 from views.models import User as model_user, passcodes_info
 import bcrypt
@@ -13,7 +13,8 @@ from modules import send_mail
 from pydantic import EmailStr, BaseModel
 from typing import Optional
 from uuid import UUID
-from app_independencies import ALLOW_TEST_ACC_FOR_DEV_PURPOSES, TEST_ACC_FOR_DEV_PURPOSES
+
+router = APIRouter()
 
 
 class login_data(BaseModel):
@@ -29,7 +30,7 @@ async def send_code_task(email: str, passcode: int):
 
 
 @router.post('/login/')
-async def view(request:Request,bg_tasks: BackgroundTasks, response: Response, userdata: login_data, db: Session = Depends(get_db) ):
+async def view(request:Request, bg_tasks: BackgroundTasks, response: Response, userdata: login_data, db: Session = Depends(get_db)):
     email = userdata.email
 
     #If test account detected user just needs to refresh a page no need to authenticate with an email passcode        

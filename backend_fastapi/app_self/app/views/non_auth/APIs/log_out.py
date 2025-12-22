@@ -1,6 +1,7 @@
-from app_independencies import router,Request
+from fastapi import APIRouter, Request
 from fastapi.responses import Response
 
+router = APIRouter()
 
 @router.post('/log-out/')
 async def view(request: Request,response: Response):

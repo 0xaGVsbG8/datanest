@@ -1,4 +1,7 @@
-from app_independencies import router, Request
+from fastapi import APIRouter, Depends, Query, HTTPException, Request
+from app_independencies import Request
+
+router = APIRouter()
 import ast
 from sqlalchemy.orm import Session
 from fastapi import Depends

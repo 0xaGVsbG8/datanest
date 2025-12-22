@@ -1,4 +1,7 @@
-from app_independencies import router,Request, DEPLOY_PATH
+from fastapi import APIRouter, Depends, BackgroundTasks, Request
+from app_independencies import Request, DEPLOY_PATH
+
+router = APIRouter()
 from sqlalchemy.orm import Session
 from fastapi import Depends, BackgroundTasks
 from db_conn import get_db

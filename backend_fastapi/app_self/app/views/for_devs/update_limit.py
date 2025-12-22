@@ -1,5 +1,8 @@
 
-from app_independencies import router, Request, CONF_JSON
+from fastapi import APIRouter, Depends, BackgroundTasks, Query, Request
+from app_independencies import Request, CONF_JSON
+
+router = APIRouter()
 from sqlalchemy.orm import Session
 from fastapi import Depends, BackgroundTasks, Query
 from db_conn import get_db

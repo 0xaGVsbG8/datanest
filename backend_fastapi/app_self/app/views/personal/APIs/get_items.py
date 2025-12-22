@@ -1,4 +1,7 @@
-from app_independencies import router,Request, __STORAGE_VAULT_PATH, PREFIX
+from fastapi import APIRouter, Depends, BackgroundTasks, HTTPException, Request
+from app_independencies import Request, __STORAGE_VAULT_PATH, PREFIX
+
+router = APIRouter()
 
 #variable to use in class
 STORAGE_VAULT_PATH = __STORAGE_VAULT_PATH

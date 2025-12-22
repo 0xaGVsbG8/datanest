@@ -1,8 +1,7 @@
 
 
 
-from app_independencies import router,Request
-from fastapi import Depends, BackgroundTasks
+from fastapi import APIRouter, Depends, BackgroundTasks, Request
 from sqlalchemy.orm import Session
 from views.models import User as model_user, passcodes_info
 import bcrypt
@@ -12,7 +11,7 @@ import random, json
 from pydantic import EmailStr, BaseModel
 from modules import send_mail
 
-
+router = APIRouter()
 
 class register_data(BaseModel):
     email : EmailStr
@@ -20,11 +19,11 @@ class register_data(BaseModel):
 
 async def send_code_task(email: str, passcode: int):
     print('sending an email to ---> ', email)
-    send_mail.send_code(email).set_content(passcode, "You have requested to create an account. Use the 6-digit access code below to continue:", "If you didn’t request this code, you can safely ignore this email.").send_this()
+    send_mail.send_code(email).set_content(passcode, "You have requested to create an account. Use the 6-digit access code below to continue:", "If you didn't request this code, you can safely ignore this email.").send_this()
 
 
 @router.post('/register/')
-async def view(request:Request,bg_tasks: BackgroundTasks, userdata: register_data, db: Session = Depends(get_db)):
+async def view(request:Request, bg_tasks: BackgroundTasks, userdata: register_data, db: Session = Depends(get_db)):
 
     email = userdata.email
     exists = db.query(model_user).filter(model_user.email==email).first()

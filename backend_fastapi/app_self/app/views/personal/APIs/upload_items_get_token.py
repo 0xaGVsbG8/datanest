@@ -1,4 +1,7 @@
-from app_independencies import router,Request, __STORAGE_VAULT_PATH
+from fastapi import APIRouter, Depends, BackgroundTasks, HTTPException, Request
+from app_independencies import Request, __STORAGE_VAULT_PATH
+
+router = APIRouter()
 from sqlalchemy.orm import Session
 from fastapi import Depends, BackgroundTasks, HTTPException
 from pydantic import BaseModel
@@ -41,7 +44,7 @@ async def dump_token_data(token, delay: int = 10):
 
 
 @router.post('/sec/gen-upload-token/')
-async def view(request: Request, userdata: userdata, background: BackgroundTasks, db: Session = Depends(get_db)):
+async def view(request: Request, userdata: userdata, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
 
 
     user = request.state.user
@@ -100,7 +103,7 @@ async def view(request: Request, userdata: userdata, background: BackgroundTasks
                 }
                 upload_token_data_ls.append(token_data)
                 async with data_lock:
-                    background.add_task(dump_token_data, token)
+                    background_tasks.add_task(dump_token_data, token)
 
                 
                 return {"token" : token}
