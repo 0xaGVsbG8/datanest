@@ -1,7 +1,7 @@
 'use client'
 import { redirect } from "next/navigation"
 import { useEffect } from "react"
-
+d
 export const home_path = '/drive/home/me'
 
 const Not_found_behaviour = () => {
