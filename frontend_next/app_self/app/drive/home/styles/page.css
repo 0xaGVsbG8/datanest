@@ -17,6 +17,10 @@ html {
   z-index: 9999;
 }
 
+#portal-root{
+  z-index: 99999999 !important;
+}
+
 body {
   background-color: #0f1219 !important;
   overflow: hidden !important;
