@@ -1,2 +1,3 @@
 composes/
 /test
+/postgres_db_docker/data
