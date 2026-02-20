@@ -1,226 +1,203 @@
+/* ═══════════════════════════════════════════
+   DEV DASHBOARD — Modern UI
+   ═══════════════════════════════════════════ */
 
-*{
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
-    transition: all 0.2s ease-in-out;
-    user-select: none;
+* {
+  box-sizing: border-box;
+  font-family: "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  transition: all 0.15s ease;
+  user-select: none;
 }
 
-
-
-
-html{
-    font-size: 16px;
+html {
+  font-size: 16px;
 }
 
-body{
-    background-color: #201f1f;
-    padding: 0;
-    margin: 0;
+body {
+  background-color: #0f1219;
+  padding: 0;
+  margin: 0;
+  color: #e2e8f0;
 }
 
-#container{
-    width: 100dvw;
-    height: 100dvh;
-    width: 90%;
-    position: absolute;
-    left: 50%;
-    transform:translate(-50%,-0%);
+/* ─── Main Container ─── */
+#container {
+  width: 90%;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0%);
 }
 
-#container-panels{
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    width: 100%;
+#container-panels {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  gap: 1.25rem;
 }
 
-
-#container-left-panel, #container-right-panel{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
+#container-left-panel, #container-right-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
 }
 
-#container-left-panel{
-    width: 30%;
+#container-left-panel {
+  width: 30%;
 }
-#container-left-panel > div{
-    width: 90%;
-}
-
-
-
-#container-right-panel{
-    width: 70%;
+#container-left-panel > div {
+  width: 90%;
 }
 
-
-#dev-dashboard-top-placeholder{
-    display: flex;
-    align-items: center;
-    justify-content: center;
+#container-right-panel {
+  width: 70%;
 }
 
-#dev-dashboard-top{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 95%;
-    padding: 0.5%;
+/* ─── Top Bar ─── */
+#dev-dashboard-top-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
 }
 
-#dev-dashboard-home-btn{
-    border-radius: 7px;
-    width: 8rem;
-    height: 3rem;
-    font-weight: bold;
-    background-color: #0c61c2;
-}
-#dev-dashboard-home-btn:hover{
-    background-color: #04274e;
+#dev-dashboard-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 95%;
+  padding: 0.75rem 0.25rem;
 }
 
-#dev-dashboard-title{
-    color: white;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    flex-direction: column;
+#dev-dashboard-home-btn {
+  border-radius: 8px;
+  width: 8rem;
+  height: 2.5rem;
+  font-weight: 600;
+  font-size: 0.88rem;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(59, 130, 246, 0.25);
+  transition: transform 0.1s, box-shadow 0.15s;
+}
+#dev-dashboard-home-btn:hover {
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.35);
+  transform: translateY(-1px);
 }
 
-#dev-dashboard-title a{
-    font-weight: bold;
-    font-size: 120%;
-    color: wheat;
+#dev-dashboard-title {
+  color: #e2e8f0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
 }
 
-#dev-dashboard-title span{
-    font-size: 80%;
-    color: rgba(255, 255, 255, 0.507);
+#dev-dashboard-title a {
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: #f8fafc;
+  letter-spacing: -0.3px;
 }
 
+#dev-dashboard-title span {
+  font-size: 0.82rem;
+  color: #64748b;
+}
 
-
-
+/* ─── Panel Spacing ─── */
 #storage-info, #quick-actions, #add-user-widget {
-    margin: 3%;
+  margin: 0.75rem 0;
 }
 
-
-#storage-info, #quick-actions{
-    width: 30%;
-    color: white;
+#storage-info, #quick-actions {
+  width: 100%;
+  color: #e2e8f0;
 }
 
-
-#storage-info{
-    color: white;
+#storage-info {
+  color: #e2e8f0;
 }
 
+#storage-info-used-placeholder,
+#storage-info-avaible,
+#storage-info-storage-acc-limit,
+#storage-info-storage-upload-limit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+  font-size: 0.88rem;
+}
 
+#storage-info-title, #quick-actions-title, #add-user-widget-title {
+  margin: 0;
+  padding: 0.75rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
 
-#storage-info-used-placeholder, #storage-info-avaible, #storage-info-storage-acc-limit, #storage-info-storage-upload-limit{
+/* ─── Panel Card ─── */
+.panel-card {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  background: #1a2035;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0;
+}
+
+/* ─── Inputs ─── */
+input[type='text'], input[type='password'] {
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  height: 2.5rem !important;
+  background: rgba(255, 255, 255, 0.04);
+  color: #e2e8f0;
+  border-radius: 8px;
+  padding: 0 0.75rem;
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type='text']:focus, input[type='password']:focus {
+  border-color: rgba(59, 130, 246, 0.5) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-family: inherit;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 968px) {
+  #container {
+    width: 95%;
+  }
+  #container-panels {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 2%;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
     width: 100%;
+    gap: 0.5rem;
+  }
+
+  #container-left-panel, #container-left-panel > div, #container-right-panel, #user-manager {
+    width: 100%;
+  }
+
+  #dev-dashboard-top {
+    width: 100%;
+  }
 }
-
-#storage-info-title, #quick-actions-title, #add-user-widget-title{
-    margin: 0;
-    padding: 1%;
-    font-size: 120%;
-    font-weight: bold;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.panel-card{
-    /* border:3px solid purple !important; */
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 0 10px 5px rgba(7, 8, 12, 0.678);
-    /* background-color: #0d3a58; */
-    background-color: #07263a;
-    padding: 1%;
-}
-
-
-
-
-input[type='text'], input[type='password']{
-    outline: none;
-    border:2px solid gray !important;
-    height: 2.5t !important;
-}
-
-button{
-    cursor: pointer;
-    border: none;
-    outline: none;
-}
-
-
-@media(max-width:968px){
-    #container{
-        width: 95%;
-    }
-    #container-panels{
-        /* border:3px solid yellow; */
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        flex-direction: column;
-        width: 100%;
-    }
-
-    #container-left-panel, #container-left-panel > div, #container-right-panel, #user-manager{
-        width: 100%;
-    }
-
-    
-
-
-   
-
-    #dev-dashboard-top{
-        width: 100%;
-    }
-
-
-
-
-
-
-
-    
-
-
-}
-

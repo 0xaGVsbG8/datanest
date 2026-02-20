@@ -1,80 +1,130 @@
+/* ═══════════════════════════════════════════
+   CREATE DIRECTORY DIALOG — Modern UI
+   ═══════════════════════════════════════════ */
 
-
-
-
-#mkdir-tab{
-    border-radius: 7px;
-    position: fixed;
-    top:50%;
-    left:50%;
-    transform: translate(-50%,-50%);
-    min-width: 30%;
-    padding: 2%;
-    background-color: #121212;
-    min-height: 12rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    box-shadow: 0px 0px  10px 5px rgb(20, 20, 20);
+#mkdir-tab {
+  border-radius: 12px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 28%;
+  padding: 1.5rem;
+  background: #1a2035;
+  min-height: 10rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  animation: modalIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 999999;
 }
 
-#mkdir-tab-title{
-    padding: 1%;
+@keyframes modalIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+#mkdir-tab-title {
+  padding: 0.5rem 0;
+  width: 100%;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #e2e8f0;
+}
+
+#mkdir-tab input {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  outline: none;
+  height: 2.6rem;
+  background: rgba(255, 255, 255, 0.04);
+  color: #e2e8f0;
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#mkdir-tab input:focus {
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+#mkdir-tab-btns-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0.25rem 0;
+  width: 100%;
+  margin-top: 1.25rem;
+}
+
+#mkdir-tab-btns-placeholder div {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 50%;
+  gap: 8px;
+}
+
+#mkdir-tab-btns-placeholder label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 50%;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+#mkdir-tab-btns-placeholder label input {
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  height: 1rem;
+  width: 1.25rem;
+  accent-color: #3b82f6;
+}
+
+#mkdir-tab-btns-placeholder-cancel {
+  color: #60a5fa;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.88rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+#mkdir-tab-btns-placeholder-cancel:hover {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+#mkdir-tab-btns-placeholder button:not(#mkdir-tab-btns-placeholder-cancel) {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #fff;
+  border: none;
+  padding: 0.45rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
+  transition: transform 0.1s, box-shadow 0.15s;
+}
+#mkdir-tab-btns-placeholder button:not(#mkdir-tab-btns-placeholder-cancel):hover {
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 968px) {
+  #mkdir-tab {
     width: 100%;
-}
-
-#mkdir-tab input{
-    border:3px solid gray;
-    border-radius: 7px;
-    width: 100%;
-    padding: 1%;
-    outline: none;
-    height: 2.8rem;
-}
-
-
-#mkdir-tab-btns-placeholder{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 0.5%;
-    width: 100%;
-    margin-top: 8%;
-}
-
-#mkdir-tab-btns-placeholder div{
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    width: 50%;
-    gap: 8px;
-}
-
-#mkdir-tab-btns-placeholder label{
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 50%;
-}
-
-#mkdir-tab-btns-placeholder label input{
-    border:3px solid blue;
-    height: 1rem;
-    width: 1.5rem;
-}
-
-#mkdir-tab-btns-placeholder-cancel{
-    color: rgb(0, 162, 255);
-}
-
-
-@media(max-width:968px){
-    #mkdir-tab{
-        width: 100%;
-        border-radius: 0px;
-        top: 40%;
-        transform: translate(-50%,-40%);
-    }
+    border-radius: 0;
+    top: 40%;
+    transform: translate(-50%, -40%);
+    padding: 1.25rem;
+  }
 }

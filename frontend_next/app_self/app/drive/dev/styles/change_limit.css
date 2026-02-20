@@ -1,81 +1,118 @@
+/* ═══════════════════════════════════════════
+   CHANGE LIMIT DIALOG — Modern UI
+   ═══════════════════════════════════════════ */
 
-
-#change-limit-tab{
-    border-radius: 8px;
-    width: 50%;
-    background-color: rgb(11, 67, 131);
-    padding: 0.5%;
-    box-shadow: 0 0 10px 5px rgba(7, 8, 12, 0.678);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 1 !important;
-    z-index: 99999;
+#change-limit-tab {
+  border-radius: 12px;
+  width: 40%;
+  background: #1a2035;
+  padding: 0;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 1 !important;
+  z-index: 99999;
+  overflow: hidden;
+  animation: limitIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-#change-limit-tab-title{
-    padding: 1%;
-    font-weight: bold;
-    font-size: 120%;
+@keyframes limitIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+#change-limit-tab-title {
+  padding: 0.85rem 1.25rem;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #e2e8f0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 #change-limit-tab-input {
-    width: 100%;
-    padding: 1%
+  width: 100%;
+  padding: 0.75rem 1.25rem;
 }
 
-#change-limit-tab-input input{
-    width: 100%;
-    padding: 2%;
-    border-radius: 8px;
-    outline: none;
-    border: 3px solid gray;
+#change-limit-tab-input input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: #e2e8f0;
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-#change-limit-tab-btn-placeholder{
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    width: 100%;
-    padding: 1%;
-    gap: 10px;
+#change-limit-tab-input input:focus {
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
 }
 
-
-#change-limit-tab-btn-placeholder-apply{
-    color: rgb(18, 207, 28);
-}
-#change-limit-tab-btn-placeholder-apply:hover{
-    color: rgb(10, 131, 16);
-}
-
-
-#change-limit-tab-btn-placeholder-cancel{
-    color: rgb(173, 8, 8)
-}
-#change-limit-tab-btn-placeholder-cancel:hover{
-    color: rgb(88, 3, 3)
+#change-limit-tab-btn-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  padding: 0.75rem 1.25rem;
+  gap: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-
-
-@media(max-width:968px){
-    #change-limit-tab{
-        width: 99%;
-        top: 40%;
-        left: 50%;
-        transform: translate(-50%, -40%);
-    }
+#change-limit-tab-btn-placeholder-apply {
+  color: #4ade80;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+#change-limit-tab-btn-placeholder-apply:hover {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.06);
 }
 
+#change-limit-tab-btn-placeholder-cancel {
+  color: #f87171;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.88rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+#change-limit-tab-btn-placeholder-cancel:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.06);
+}
 
+/* ─── Responsive ─── */
+@media (max-width: 968px) {
+  #change-limit-tab {
+    width: 95%;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -40%);
+  }
+}
+
+/* ─── Hide Number Spinners ─── */
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 input[type=number] {
-    -moz-appearance: textfield; /* Firefox */
+  -moz-appearance: textfield;
 }

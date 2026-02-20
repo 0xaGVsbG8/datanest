@@ -141,7 +141,7 @@ export default function Layout_client({ children }: { children: React.ReactNode 
             );
         }
         else{
-            redirect(`/drive/auth/login/`)
+            window.open('/datanest/drive/auth/login', '_self')
         }
 
     }

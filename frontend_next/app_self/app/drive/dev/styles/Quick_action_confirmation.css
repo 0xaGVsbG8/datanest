@@ -1,89 +1,113 @@
+/* ═══════════════════════════════════════════
+   DEV QUICK ACTION CONFIRMATION — Modern UI
+   ═══════════════════════════════════════════ */
 
-
-
-
-#quick_action_confirmation{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    padding: 0%;
-    min-width: 40%;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #2b2b2b;
-    box-shadow: 0 0 5px 4px rgb(19, 18, 18);
-    z-index: 999999;
-
+#quick_action_confirmation {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 0;
+  min-width: 36%;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #1a2035;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  z-index: 999999;
+  animation: confirmIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-
-#quick_action_confirmation-title{
-    padding: 2%;
-    font-weight: bold;
-    color: rgb(10, 184, 214);
-    border-bottom: gray 3px solid;
-    width: 100%;
+@keyframes confirmIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
-#quick_action_confirmation-content{
-    display: flex;
-    align-items: stretch;
-    justify-content: center;
-    margin: 2%;
+#quick_action_confirmation-title {
+  padding: 0.85rem 1.25rem;
+  font-weight: 600;
+  color: #60a5fa;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  width: 100%;
+  font-size: 0.95rem;
 }
 
-#quick_action_confirmation-content-pic{
-    min-width: 20%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+#quick_action_confirmation-content {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 1rem 1.25rem;
 }
 
-#quick_action_confirmation-content-text-placeholder{
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    width: 80%;
+#quick_action_confirmation-content-pic {
+  min-width: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-#quick_action_confirmation-content-text{
-    width: 100%;
-    word-break: break-word; 
-    overflow-wrap: break-word; 
+#quick_action_confirmation-content-text-placeholder {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 80%;
 }
 
-#quick_action_confirmation-bts-placeholder{
-    width: 100%;
-    border-top: gray 3px solid;
+#quick_action_confirmation-content-text {
+  width: 100%;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
-#quick_action_confirmation-bts{
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 8px;
-    padding: 2%;
+#quick_action_confirmation-bts-placeholder {
+  width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-
-#quick_action_confirmation-bts-cancel{
-    color: rgb(163, 11, 11);
-}
-#quick_action_confirmation-bts-cancel:hover{
-    color: rgb(105, 8, 8);
-}
-
-
-#quick_action_confirmation-bts-confirm{
-    color: rgb(0, 183, 255)
-}
-#quick_action_confirmation-bts-confirm:hover{
-    color: rgb(11, 95, 128)
+#quick_action_confirmation-bts {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 0.75rem 1.25rem;
 }
 
-@media(max-width:968px){
-    #quick_action_confirmation{
-        width: 100%;
-    }
+#quick_action_confirmation-bts-cancel {
+  color: #f87171;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.88rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+#quick_action_confirmation-bts-cancel:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.06);
+}
+
+#quick_action_confirmation-bts-confirm {
+  color: #60a5fa;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.88rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+#quick_action_confirmation-bts-confirm:hover {
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.06);
+}
+
+@media (max-width: 968px) {
+  #quick_action_confirmation {
+    width: 92%;
+    min-width: unset;
+  }
 }

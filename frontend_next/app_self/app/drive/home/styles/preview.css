@@ -1,213 +1,221 @@
+/* ═══════════════════════════════════════════
+   FILE PREVIEW — Modern UI
+   ═══════════════════════════════════════════ */
 
-
-*{
-    transition:  none;
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-    user-select: auto !important;
-
+* {
+  transition: none;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  user-select: auto !important;
 }
 
-
-
-.item-displayer{
-    background-color: #212121 ;
-    border-radius: 7px;
-    top:0%;
-    position: fixed;
-    width: 100dvw;
-    min-height: 100dvh;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-direction: column;
-    opacity: 0;
-    pointer-events:all;
-    z-index: 99999999999 !important;
-    /* padding: 1%; */
+.item-displayer {
+  background: #0f1219;
+  border-radius: 0;
+  top: 0%;
+  position: fixed;
+  width: 100dvw;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: all;
+  z-index: 99999999999 !important;
 }
 
+.item-displayer-placeholder {
+  width: 100%;
+  height: auto;
+}
 
-.item-displayer-placeholder{
+img {
+  background-color: transparent !important;
+}
+
+/* ─── Preview Header ─── */
+.item-displayer-info, .item-displayer-info-fake {
+  border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+  display: flex;
+  align-items: flex-start;
+  padding: 0.6rem 1rem !important;
+  min-height: 3rem;
+  width: 100%;
+}
+
+.item-displayer-info {
+  position: fixed;
+  z-index: 99999999 !important;
+  width: 100dvw;
+  top: 0%;
+  background: linear-gradient(180deg, #111827 0%, rgba(17, 24, 39, 0.95) 100%);
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.item-displayer-name {
+  font-weight: 600;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  padding-right: 0.75rem;
+  max-width: 70%;
+  color: #e2e8f0;
+  font-size: 0.92rem;
+}
+
+.item-displayer-down-btn, .close-preview-btn {
+  height: 2rem;
+  width: 2rem;
+  user-select: none !important;
+  opacity: 0.7;
+  transition: opacity 0.15s !important;
+  cursor: pointer;
+}
+.item-displayer-down-btn:hover, .close-preview-btn:hover {
+  opacity: 1;
+}
+
+.item-displayer-top-bts {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* ─── Bottom Panel ─── */
+.item-displayer-user-panel {
+  border-top: 1px solid rgba(59, 130, 246, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 9999999;
+  background: linear-gradient(0deg, #111827 0%, rgba(17, 24, 39, 0.95) 100%);
+  backdrop-filter: blur(12px);
+  gap: 0.5rem;
+}
+
+.item-displayer-user-panel button {
+  margin-left: 0.25rem;
+  padding: 0.3rem;
+  user-select: none !important;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s !important;
+}
+.item-displayer-user-panel button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.item-displayer-user-panel button:first-child {
+  margin-right: 0.25rem;
+  margin-left: 0;
+}
+
+.item-displayer-user-panel img {
+  height: 1.75rem;
+  background-color: transparent !important;
+}
+
+.item-displayer-info {
+  padding: 0.6rem 1rem;
+  user-select: none !important;
+}
+
+/* ─── Media Container ─── */
+.item-displayer-media {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 0;
+  justify-content: center;
+  height: 86dvh;
+  min-height: 50dvh !important;
+  max-height: 86dvh;
+}
+
+.item-displayer-media div * {
+  background-color: #1a2035;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+  max-height: 75dvh;
+  border-radius: 8px;
+}
+
+.item-displayer-media pre {
+  border-radius: 10px;
+  background-color: #1a2035;
+  width: 95dvw;
+  overflow: auto;
+  height: 85dvh;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  color: #e2e8f0;
+  padding: 1.5rem;
+  font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  user-select: auto !important;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ─── Nav Buttons ─── */
+#next-preview-btn {
+  margin-right: 0.5%;
+}
+#prev-preview-btn {
+  margin-left: 0.5%;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .item-displayer {
+    height: 101dvh !important;
+    width: 101dvw;
+    min-height: 80dvh !important;
+  }
+  .item-displayer-media div * { width: 100%; min-height: 10dvh; }
+  .item-displayer-user-panel { width: 100%; min-height: 4dvh; padding: 0.5rem; }
+  .item-displayer-media div * {
     width: 100%;
-    height: auto;
-}
-
-img{
-    background-color: transparent !important;
-}
-
-
-.item-displayer-info, .item-displayer-info-fake{
-    border-bottom:3px solid rgb(0, 174, 255);
-    display: flex;
-    align-items: flex-start;
-    padding: 0.5% !important; 
-    min-height: 3rem;
+    max-height: 80dvh;
+  }
+  .item-displayer-media pre { width: 94dvw; height: 70dvh; }
+  .item-displayer-info { padding: 0.5rem 0.75rem; }
+  .item-displayer-media {
+    height: 8dvh !important;
+    min-height: 84dvh !important;
+    max-height: 84dvh !important;
     width: 100%;
+    padding: 0.5rem;
+  }
+  .item-displayer-user-panel button {
+    padding: 0.5rem;
+  }
 }
 
-.item-displayer-info{
-    position: fixed;
-    z-index: 99999999 !important;
-    width: 100.5dvw;
-    top: 0%;
-    background-color: #212121;
-    overflow: hidden;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+button {
+  cursor: pointer;
 }
 
-
-.item-displayer-name{
-    font-weight: bold;
-    white-space: normal;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    padding-right: 0.5%;
-    max-width: 70%;
+.hide_this {
+  visibility: hidden !important;
+}
+.show_this {
+  visibility: visible !important;
 }
 
-
-
-.item-displayer-down-btn, .close-preview-btn{
-    height: 2rem;
-    width: 2rem;
-    user-select: none !important;
-}
-
-.item-displayer-top-bts{
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-}
-
-.item-displayer-user-panel{
-    border-top:3px solid red;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 1%;
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    z-index: 9999999;
-    background-color: #212121;
-    
-}
-
-.item-displayer-user-panel button{
-    margin-left: 0.5%;
-    padding: 0.2%;
-    user-select: none !important;
-}
-
-.item-displayer-user-panel button:first-child{
-    margin-right: 0.5%;
-    margin-left: 0%;
-}
-
-
-.item-displayer-user-panel img{
-    height: 2rem;
-    background-color: white;
-}
-
-
-
-.item-displayer-info{
-    padding: 0.5%;
-    user-select: none !important;
-}
-
-
-.item-displayer-media{
-    padding: 1%;
-    display: flex;
-    align-items: center;
-    position: relative;
-    z-index: 0;
-    justify-content: center;
-    height: 86dvh;
-    min-height:50dvh !important;
-    max-height: 86dvh;
-}
-
-.item-displayer-media div{
-}
-
-.item-displayer-media div *{
-    background-color: #2b2b2b;
-    box-shadow: 0 0px 15px 4px rgba(2, 2, 2, 0.5);
-    max-height: 75dvh;
-}
-
-.item-displayer-media pre{
-    border-radius: 7px;
-    background-color: white;
-    width:95dvw;
-    overflow: auto;
-    height: 85dvh;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    color: black;
-    padding: 2%;
-    font-family: sans-serif;
-    user-select:auto !important;
-}
-
-
-#next-preview-btn{
-    margin-right: 0.5%;
-}
-
-#prev-preview-btn{
-    margin-left: 0.5%;
-}
-
-
-@media(max-width:768px){
-    .item-displayer{
-        height: 101dvh !important;
-        width: 101dvw;
-        min-height: 80dvh !important;
-    }
-    .item-displayer-media div *{width: 100%;min-height: 10dvh;}
-    .item-displayer-user-panel{width: 100%;min-height: 4dvh; padding: 2%;}
-    .item-displayer-media div *{
-        width: 100%;
-        max-height: 80dvh;
-    }
-    .item-displayer-media pre {width: 94dvw;height: 70dvh;}
-    .item-displayer-info{padding: 2%;}
-    .item-displayer-media{
-        height: 8dvh !important;
-        min-height: 84dvh !important; 
-        max-height: 84dvh !important; 
-        width: 100%;
-        padding: 3% ;
-    }
-    .item-displayer-user-panel button{
-        padding: 1.5%;
-    }
-}
-
-
-button{
-    cursor: pointer;
-}
-
-
-.hide_this{
-    visibility: hidden !important;
-}
-
-.show_this{
-    visibility: visible !important;
-}
-
-img, video{
-    user-select: none !important;
+img, video {
+  user-select: none !important;
 }

@@ -1,135 +1,140 @@
-#user-manager{
-    margin-top: 1%;
+/* ═══════════════════════════════════════════
+   USER MANAGER — Modern UI
+   ═══════════════════════════════════════════ */
+
+#user-manager {
+  margin-top: 0.75rem;
+  color: #e2e8f0;
+  width: 95%;
+  padding: 0;
 }
 
-#user-manager{
-    color: white;
-    width: 95%;
-    padding: 0.5%;
-
+#user-manager-title {
+  margin: 0;
+  padding: 0.75rem;
+  font-weight: 700;
+  font-size: 1.05rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-
-#user-manager-title{
-    margin: 0;
-    padding: 1%;
+#user-manager-records {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
-
-
-#user-manager-records{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+.user-manager-record {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  width: 100%;
+  min-height: 3.25rem;
+  transition: background 0.1s;
 }
 
-.user-manager-record{
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-    border-bottom:3px solid gray;
+.user-manager-record:hover {
+  background: rgba(59, 130, 246, 0.04);
+}
+
+.user-manager-record > div {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+.user-manager-record > div:not(.user-manager-record-address) {
+  justify-content: center;
+}
+
+.user-manager-record-address {
+  width: 55%;
+  color: #cbd5e1;
+}
+
+.user-manager-record-address:not(:first-child),
+.user-manager-record-crt-date {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.user-manager-record-address a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: inherit;
+}
+
+.user-manager-record-space-info {
+  width: 20%;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.user-manager-record-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 25%;
+  gap: 0.25rem;
+}
+
+.user-manager-record-action-drop,
+.user-manager-record-action-clean {
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  transition: all 0.12s;
+}
+
+.user-manager-record-action-drop {
+  color: #f87171;
+}
+.user-manager-record-action-drop:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.06);
+}
+
+.user-manager-record-action-clean {
+  color: #38bdf8;
+}
+.user-manager-record-action-clean:hover {
+  color: #0ea5e9;
+  background: rgba(14, 165, 233, 0.06);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 968px) {
+  #user-manager {
     width: 100%;
-    min-height: 3.5rem;
+    margin-top: 0.5rem;
+  }
 
-}
+  .user-manager-record-address {
+    width: 38%;
+    font-size: 0.7rem;
+  }
 
-.user-manager-record > div{
-    display: flex;
-    align-items: center;
-    padding: 0.5%;
-}
+  .user-manager-record-space-info {
+    width: 17%;
+    font-size: 0.75rem;
+  }
 
+  .user-manager-record-crt-date {
+    width: 22%;
+  }
 
-
-.user-manager-record > div:not(.user-manager-record-address){
-    justify-content: center;
-
-}
-
-.user-manager-record-address{
-    width: 55%;
-}
-
-.user-manager-record-address:not(:first-child), .user-manager-record-crt-date{
-    font-size: 80%;
-}
-
-.user-manager-record-address a{
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-
-.user-manager-record-space-info{
-    width: 20%;
-}
-
-
-.user-manager-record-action{
+  .user-manager-record-action {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     width: 25%;
+    text-align: center;
+    font-size: 0.75rem;
+  }
 }
-
-.user-manager-record-action-drop,.user-manager-record-action-clean{
-    cursor: pointer;
-}
-
-
-
-.user-manager-record-action-drop{
-    color: hsla(7, 89%, 48%, 0.959);
-}
-.user-manager-record-action-drop:hover{
-    color: hsla(7, 89%, 48%, 0.411);
-}
-
-
-
-.user-manager-record-action-clean{
-    color: hsla(197, 89%, 48%, 0.959);
-}
-.user-manager-record-action-clean:hover{
-    color: hsla(197, 89%, 48%, 0.39);
-}
-
-
-
-@media(max-width:968px){
-
-    #user-manager{
-        width: 100%;
-        margin-top: 3%;
-    }
-    
-    .user-manager-record-address{
-        width: 38%;
-        font-size: 60%;
-    }
-
-  
-
-    .user-manager-record-space-info{
-        width: 17%;
-    }
-
-    .user-manager-record-crt-date{
-        width: 22%;
-    }
-
-    .user-manager-record-action{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        width: 25%;
-        text-align: center;
-        font-size: 80%;
-    }
-
-}
-

@@ -1,32 +1,37 @@
-#quick-actions{
-    border:3px solid orange !important;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    flex-direction: column;
+/* ═══════════════════════════════════════════
+   QUICK ACTIONS — Modern UI
+   ═══════════════════════════════════════════ */
+
+#quick-actions {
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
 }
 
-#quick-actions div{
-    cursor: pointer;
+#quick-actions div {
+  cursor: pointer;
 }
-
 
 #quick-actions * {
-    padding: 1%;
+  padding: 0.35rem 0.75rem;
 }
 
-
-.quick-actions-action{
-    padding: 1% !important;
-    padding-left: 2% !important;
-    width: 100%;
-    color: rgb(184, 180, 180);
+.quick-actions-action {
+  padding: 0.5rem 1rem !important;
+  width: 100%;
+  color: #94a3b8;
+  font-size: 0.88rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: all 0.12s;
 }
 
-
-.quick-actions-action  { 
-    cursor: pointer;
+.quick-actions-action:hover {
+  background: rgba(59, 130, 246, 0.06);
+  color: #60a5fa;
 }
 
-
-
+.quick-actions-action:last-child {
+  border-bottom: none;
+}
