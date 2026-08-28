@@ -8,7 +8,7 @@ PREFIX='/backend'
 
 
 ROOT_EMAIL = 'root@dash.io'
-ROOT_PASSWD = 'qwerty'
+ROOT_PASSWD = 'Liduka35'
 ROOT_USER_ID = str(uuid4())
 
 
@@ -77,7 +77,8 @@ origins = [
     # '*' #dev only,
     'http://localhost:9000',
     'http://localhost:9001',
-
+    'https://berkehut.ddns.net',
+    'http://berkehut.ddns.net',
 ]
 
 

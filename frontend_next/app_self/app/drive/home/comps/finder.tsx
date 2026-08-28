@@ -16,30 +16,12 @@ const Finder = ({type = 'normal'}: Finder_props) => {
 
     const search_for = useCallback(()=>{
         const user_input = input_value_ref.current.trim().normalize().replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '')  as string
-        const records = Array.from(document.querySelectorAll('.data-item-name-item')) as HTMLDivElement[]
-        
-        const to_save = []
-        const to_hide = []
-        
-        for(const [index, el] of records.entries()){
-            to_hide.push(index)
-            if(el.textContent){
-                const item_name = el.textContent.trim().normalize().replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '') 
-                if(item_name.startsWith(user_input)){
-                    to_save.push(index)
-                }
-            }
-        }
+        const records = Array.from(document.querySelectorAll('.data-section-record:not(#fake-record)')) as HTMLDivElement[]
 
-
-        for(const index of to_hide){
-            if(to_save.includes(index)){continue}
-            document.getElementById(`record${index}`)!.style.display = 'none'
-        }
-
-
-        for(const index of to_save){
-            document.getElementById(`record${index}`)!.style.display = 'flex'
+        for(const record of records){
+            const name_el = record.querySelector('.data-item-name-item')
+            const item_name = (name_el?.textContent ?? '').trim().normalize().replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '')
+            record.style.display = item_name.startsWith(user_input) ? 'flex' : 'none'
         }
     },[])
 
