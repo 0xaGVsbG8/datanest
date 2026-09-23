@@ -60,7 +60,7 @@ def deploy_backend():
 
     cmd = f"python {OVERSEER_PATH}"
     subprocess.Popen(cmd,shell=True)
-    cmd = f"cd {os.path.dirname(app_path)} && uvicorn main:app --host 0.0.0.0 --port 9002 {'--reload' if DEV_BOOT else ''}"
+    cmd = f"cd {os.path.dirname(app_path)} && uvicorn main:app --host 0.0.0.0 --port 9002 --ws-ping-interval 20 --ws-ping-timeout 60 --ws-max-size 16777216 {'--reload' if DEV_BOOT else ''}"
     subprocess.run(cmd,shell=True)
 
 

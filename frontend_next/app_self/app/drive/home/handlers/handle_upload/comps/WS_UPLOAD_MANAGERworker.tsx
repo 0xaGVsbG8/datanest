@@ -75,19 +75,58 @@ const Begin_upload = ({upload_token, call_for_begin_upload}:Begin_upload_props) 
         ){  
             this.ws = ws
         }
+
+        isOpen(){
+            return this.ws.readyState === WebSocket.OPEN
+        }
+
+        sendJson(payload: object){
+            if(!this.isOpen()) throw new Error('upload socket closed')
+            this.ws.send(JSON.stringify(payload))
+        }
+
+        async sendChunk(chunk: Blob){
+            const buf = await chunk.arrayBuffer()
+            if(!this.isOpen()) throw new Error('upload socket closed')
+            this.ws.send(buf)
+        }
         
 
         async waitForOpen() {
 
-            return new Promise<void>((resolve)=>{
+            return new Promise<void>((resolve, reject)=>{
                 this.ws.onclose = () => {
-                    this.ws.send(JSON.stringify({'handle_disconnect':true}))
                     if(uploading_ref.current){
                         connection_lost_pop_up()
-                        this.ws.close()
+                    }
+                    reject(new Error('upload socket closed'))
+                }
+                this.ws.onerror = () => reject(new Error('upload socket error'))
+                this.ws.onopen = () => resolve()
+            })
+        }
+
+
+        waitForMessageFlag(flag: string){
+            return new Promise<any>((resolve, reject)=>{
+                const handler = (e: MessageEvent) => {
+                    try{
+                        const data = JSON.parse(e.data)
+                        if(data[flag]){
+                            this.ws.removeEventListener('message', handler)
+                            this.ws.removeEventListener('close', onClose)
+                            resolve(data)
+                        }
+                    }catch{
+                        return
                     }
                 }
-                this.ws.onopen = () => resolve()
+                const onClose = () => {
+                    this.ws.removeEventListener('message', handler)
+                    reject(new Error('upload socket closed'))
+                }
+                this.ws.addEventListener('message', handler)
+                this.ws.addEventListener('close', onClose)
             })
         }
 
@@ -95,18 +134,12 @@ const Begin_upload = ({upload_token, call_for_begin_upload}:Begin_upload_props) 
 
 
         async register_file(bare_name: string,rel_name: string, filesize: number, rel_included : boolean){
-            this.ws.send(JSON.stringify({'registeration': true,'bare_name':bare_name, 'rel_name':rel_name,'rel_included':rel_included , 'filesize':filesize}))
-            return new Promise<boolean>((resolve)=>{
-                const handler = (e:MessageEvent) => {
-                    if(JSON.parse(e.data).registered){
-                        this.ws.removeEventListener('message',handler)
-                        resolve(true)
-                    }
-                }
-            this.ws.addEventListener('message',handler)
-            })
-
+            this.sendJson({'registeration': true,'bare_name':bare_name, 'rel_name':rel_name,'rel_included':rel_included , 'filesize':filesize})
+            await this.waitForMessageFlag('registered')
+            return true
         }
+
+
 
 
 
@@ -117,37 +150,21 @@ const Begin_upload = ({upload_token, call_for_begin_upload}:Begin_upload_props) 
 
 
         async take_off_safety_lock(){
-            this.ws.send(JSON.stringify({'safety_lock':false}))
-            return new Promise<safety_lock_data>((resolve)=>{
-                const handler = (e: MessageEvent) => {
-                    const data = JSON.parse(e.data)
-                    if(data.safety_lock_took_off){
-                        const item_data:safety_lock_data = {
-                            this: data.itemdata,
-                            parent: data.itemdata_parent
-                        }
-                        this.ws.removeEventListener('message',handler)
-                        resolve(item_data)
-                    }
-                }
-                this.ws.addEventListener('message',handler)
-            })
+            this.sendJson({'safety_lock':false})
+            const data = await this.waitForMessageFlag('safety_lock_took_off')
+            const item_data:safety_lock_data = {
+                this: data.itemdata,
+                parent: data.itemdata_parent
+            }
+            return item_data
         }
 
 
 
         async waitForReply(){
-            return new Promise<boolean>((resolve)=>{
-                const handler = (e: MessageEvent) => {
-                    if(JSON.parse(e.data).received){
-                        this.ws.removeEventListener('message',handler)
-                        resolve(true)
-                    }
-                }
-                this.ws.addEventListener('message',handler)
-            })
+            await this.waitForMessageFlag('received')
+            return true
         }
-
 
 
         async upload_file(
@@ -163,7 +180,11 @@ const Begin_upload = ({upload_token, call_for_begin_upload}:Begin_upload_props) 
 
 
             const cancel_upload = () => {
-                this.ws.send(JSON.stringify({'erase_upload':true}))
+                try{
+                    this.sendJson({'erase_upload':true})
+                }catch{
+                    return
+                }
                 set_coms(prev=>{
                     const newComs = {...prev}
                     delete newComs[operations_count]
@@ -199,10 +220,9 @@ const Begin_upload = ({upload_token, call_for_begin_upload}:Begin_upload_props) 
 
 
 
-
             while(offset<target.size){
                 let chunk = target.slice( offset, offset + CHUNK_SIZE)
-                this.ws.send(chunk)
+                await this.sendChunk(chunk)
 
                 
                 offset += CHUNK_SIZE
@@ -267,97 +287,104 @@ const Begin_upload = ({upload_token, call_for_begin_upload}:Begin_upload_props) 
         const ws_url = base_ws_url+`/handle_upload/?access_token=${upload_token}`
         ws_ref.current = new WebSocket(ws_url)
         const UPLOADER_Worker_inst = new WS_UPLOAD_MANAGER_worker(ws_ref.current)
-        await  UPLOADER_Worker_inst.waitForOpen()
+
+        try{
+            await  UPLOADER_Worker_inst.waitForOpen()
 
 
 
-        const files = Array.from(UserFileList)
+            const files = Array.from(UserFileList)
 
-        const file_inputs = document.querySelectorAll<HTMLInputElement>(FILE_INPUTS_CLASSNAME)
-        for(const el of file_inputs){
-            el.value = ''
-        }
+            
+            if(files) set_operations_count(c=>c+1)
 
-        
-        if(files) set_operations_count(c=>c+1)
+            const here_packsize: number =  packsize_ref.current
 
-        const here_packsize: number =  packsize_ref.current
+            for(const [id, item] of files.entries()){
+                const bare_name: string = item.name
+                const rel_name: string = bare_name.includes('/') ? bare_name : item.webkitRelativePath
 
-        for(const [id, item] of files.entries()){
-            const bare_name: string = item.name
-            const rel_name: string = bare_name.includes('/') ? bare_name : item.webkitRelativePath
+                const filtered_bare_name: string = bare_name.includes('/') ? bare_name.split('/')[bare_name.split('/').length-1] : bare_name
 
-            const filtered_bare_name: string = bare_name.includes('/') ? bare_name.split('/')[bare_name.split('/').length-1] : bare_name
-
-            const rel_included: boolean = !!rel_name
+                const rel_included: boolean = !!rel_name
 
 
 
-            await UPLOADER_Worker_inst.register_file(filtered_bare_name,rel_name, item.size, rel_included)
-            const {received_saved_progress, received_data} = await UPLOADER_Worker_inst.upload_file(item, id+1, files.length, saved_progress, here_packsize)
-            saved_progress.current = received_saved_progress
+                await UPLOADER_Worker_inst.register_file(filtered_bare_name,rel_name, item.size, rel_included)
+                const {received_saved_progress, received_data} = await UPLOADER_Worker_inst.upload_file(item, id+1, files.length, saved_progress, here_packsize)
+                saved_progress.current = received_saved_progress
 
 
 
 
-            set_fetched_data(prev=>{
-                if(!prev) return prev
-                const newPrev = {...prev}
-                if(received_data.this){
-                    newPrev.items_ls = newPrev.items_ls.filter(item=>item.path_token !== received_data.this?.path_token)
-                    newPrev.items_ls.push(received_data.this)
-                }
+                set_fetched_data(prev=>{
+                    if(!prev) return prev
+                    const newPrev = {...prev}
+                    if(received_data.this){
+                        newPrev.items_ls = newPrev.items_ls.filter(item=>item.path_token !== received_data.this?.path_token)
+                        newPrev.items_ls.push(received_data.this)
+                    }
 
-                if(received_data.parent){
-                    newPrev.items_ls = newPrev.items_ls.filter(item=>item.path_token !== received_data.parent?.path_token)
-                    newPrev.items_ls.push(received_data.parent)
-                }
-                
+                    if(received_data.parent){
+                        newPrev.items_ls = newPrev.items_ls.filter(item=>item.path_token !== received_data.parent?.path_token)
+                        newPrev.items_ls.push(received_data.parent)
+                    }
+                    
 
 
-                token_ls.current = {}
+                    token_ls.current = {}
 
-                for(const item of newPrev.items_ls){
-                    token_ls.current[item.name] = {token: item.path_token, path: item.path}
-                }
-                
-                newPrev.items_ls.sort((a,b)=>{
-                    if(a.type=== b.type) return 0
-                    if(a.type === 'dir') return -1
-                    return 1
+                    for(const item of newPrev.items_ls){
+                        token_ls.current[item.name] = {token: item.path_token, path: item.path}
+                    }
+                    
+                    newPrev.items_ls.sort((a,b)=>{
+                        if(a.type=== b.type) return 0
+                        if(a.type === 'dir') return -1
+                        return 1
+                    })
+
+                    return newPrev
                 })
 
-                return newPrev
-            })
+
+              
+
+                
+
+            }
 
 
-          
+            const item_name = files[files.length-1].name.length > max_name_length ? files[files.length-1].name.slice(0, max_name_length) + '...' : files[files.length-1].name
+            const msg = `Uploading: ${item_name} | ${files.length} item out of ${files.length} | ${'100.00'}%`
+            
+            setTimeout(() => {
+                operations_tab_context.set_coms(prev=>({
+                    ...prev,
+                    [operations_tab_context.operations_count]:[msg as string, ()=>{
+                    }],
+                }))
+            }, 150);
 
             
 
-        }
-
-
-        const item_name = files[files.length-1].name.length > max_name_length ? files[files.length-1].name.slice(0, max_name_length) + '...' : files[files.length-1].name
-        const msg = `Uploading: ${item_name} | ${files.length} item out of ${files.length} | ${'100.00'}%`
-        
-        setTimeout(() => {
-            operations_tab_context.set_coms(prev=>({
-                ...prev,
-                [operations_tab_context.operations_count]:[msg as string, ()=>{
-                }],
-            }))
-        }, 150);
-
-        
-
-        uploading_ref.current = false
-        UPLOADER_Worker_inst.ws.close()
-        ws_ref.current.close()
-        const file_inputsx = document.querySelectorAll(FILE_INPUTS_CLASSNAME)
-        for(const e of file_inputsx){
-            const el = e as HTMLInputElement
-            el.value = ''
+            uploading_ref.current = false
+            if(UPLOADER_Worker_inst.isOpen()){
+                UPLOADER_Worker_inst.ws.close()
+            }
+        }catch{
+            if(uploading_ref.current){
+                connection_lost_pop_up()
+            }
+            if(ws_ref.current && (ws_ref.current.readyState === WebSocket.OPEN || ws_ref.current.readyState === WebSocket.CONNECTING)){
+                ws_ref.current.close()
+            }
+        }finally{
+            const file_inputsx = document.querySelectorAll(FILE_INPUTS_CLASSNAME)
+            for(const e of file_inputsx){
+                const el = e as HTMLInputElement
+                el.value = ''
+            }
         }
     
     

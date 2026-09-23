@@ -9,6 +9,16 @@ from modules import justify_path_for_db
 import uuid
 
 
+RECENT_WRITE_GRACE_SECS = 30 * 60
+
+
+def _is_recent_write(path: str) -> bool:
+    try:
+        return (time.time() - os.path.getmtime(path)) < RECENT_WRITE_GRACE_SECS
+    except OSError:
+        return True
+
+
 #Looks for unregistered files and removes their record from db and also does that in reverse
 async def fake_path_records_record():
     print('Fake path records scanner active!')
@@ -38,7 +48,7 @@ async def fake_path_records_record():
                         dpath = os.path.normpath(os.path.join(root,d)).replace('\\','/')
                         if dpath in ignore_users_dirs:
                             continue
-                        if dpath not in paths:
+                        if dpath not in paths and not _is_recent_write(dpath):
                             shutil.rmtree(dpath)
                     except Exception:
                         pass
@@ -46,7 +56,7 @@ async def fake_path_records_record():
                 for f in files:
                     try:
                         fpath = os.path.normpath(os.path.join(root,f)).replace('\\','/')
-                        if fpath not in paths:
+                        if fpath not in paths and not _is_recent_write(fpath):
                             os.remove(fpath)
                     except Exception:
                         pass

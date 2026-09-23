@@ -30,7 +30,7 @@ upload_token_data_ls = []
 data_lock = asyncio.Lock()
 
 
-async def dump_token_data(token, delay: int = 10):
+async def dump_token_data(token, delay: int = 600):
     await asyncio.sleep(delay)
     async with data_lock:
         upload_token_data_ls_temp  = upload_token_data_ls.copy()

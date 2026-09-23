@@ -78,6 +78,7 @@ origins = [
     'http://localhost:9000',
     'http://localhost:9001',
     'https://berkehut.ddns.net',
+    'https://gowno.shop',
     'http://berkehut.ddns.net',
 ]
 

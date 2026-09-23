@@ -4,7 +4,7 @@ import Ask_for_upload_token from "./comps/ask_for_upload_token"
 import Begin_upload from "./comps/WS_UPLOAD_MANAGERworker"
 
 export const FILE_INPUTS_CLASSNAME = '.file-inputer'
-export const CHUNK_SIZE = 15 * (1024*1024) //MBs
+export const CHUNK_SIZE = 1 * (1024*1024) // 1MB websocket frames
 
 export const BLANK_FILE_NAME  = 'BLANK_1x3100012131312311sd112nnnnnnx'
 

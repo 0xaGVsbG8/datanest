@@ -41,9 +41,51 @@ async def asyncio_drop_file(safety_lock, path):
     drop_file(path)
 
 
+def register_item_in_db(db, filepath, owner, parent_token, item_type='file'):
+    db_path = justify_path_for_db.get(filepath)
+    existing = db.query(ITEMINFO).filter(ITEMINFO.path == db_path).first()
+    if existing:
+        return existing.url_token
+
+    item_token = str(uuid.uuid4())
+    db.add(ITEMINFO(
+        path=db_path,
+        owner=owner,
+        type=item_type,
+        url_token=item_token,
+        isFavourite=False,
+    ))
+    parent_shared_record = db.query(shared_items).filter(shared_items.local_token==parent_token).first()
+    if parent_shared_record:
+        db.add(shared_items(
+            path=db_path,
+            type=item_type,
+            local_token=item_token,
+            access_type=parent_shared_record.access_type,
+            allowed_by=parent_shared_record.allowed_by,
+            overall_access=parent_shared_record.overall_access,
+            owner=parent_shared_record.owner,
+            parent=False,
+            FavouriteOf=[],
+        ))
+    db.commit()
+    return item_token
 
 
+def create_empty_file(filepath):
+    parent = os.path.dirname(filepath)
+    if parent:
+        os.makedirs(parent, exist_ok=True)
+    with open(filepath, 'w') as f:
+        f.write('')
 
+
+def append_chunk(filepath, chunk):
+    parent = os.path.dirname(filepath)
+    if parent:
+        os.makedirs(parent, exist_ok=True)
+    with open(filepath, 'ab') as f:
+        f.write(chunk)
 
 
 @router.websocket('/handle_upload/')
@@ -79,13 +121,15 @@ async def view(websocket: WebSocket):
             created_parents = {}
             first_prior_parent = None
             default_first_parent = None
+            item_token = None
+            initial_folder_size = await asyncio.to_thread(get_folder_size, path)
 
             db = next(get_db())
 
 
             try:
                 while True:
-                    if PAYLOAD_SIZE>MAX_UPLOAD_SIZE or get_folder_size(path)+PAYLOAD_SIZE>MAX_STORAGE_PER_ACCOUNT:
+                    if PAYLOAD_SIZE>MAX_UPLOAD_SIZE or initial_folder_size+PAYLOAD_SIZE>MAX_STORAGE_PER_ACCOUNT:
                         print(PAYLOAD_SIZE, MAX_UPLOAD_SIZE)
                         await websocket.close()
                         break
@@ -203,17 +247,17 @@ async def view(websocket: WebSocket):
 
 
                                     filepath = os.path.join(itemdata_parent_dir, bare_name)
+
+
+
+                                await asyncio.to_thread(create_empty_file, filepath)
+                                if filepath not in filepath_ls:
                                     filepath_ls.append(filepath)
-
-
-
-                                with open(filepath, 'w') as f:
-                                    f.write('')
 
                                 if blank_item_alias in filepath and os.path.exists(filepath):
                                     os.remove(filepath)
-                                    
-
+                                else:
+                                    item_token = register_item_in_db(db, filepath, owner, parent_token, 'file')
 
                                 
                                 await websocket.send_json({'registered': True})
@@ -242,7 +286,10 @@ async def view(websocket: WebSocket):
                                 SAFETY_LOCK = data.get('safety_lock')
                                 if not SAFETY_LOCK:
 
-                                    item_token = str(uuid.uuid4())
+                                    if filepath and blank_item_alias not in filepath:
+                                        item_token = register_item_in_db(db, filepath, owner, parent_token, 'file')
+                                    elif not item_token:
+                                        item_token = str(uuid.uuid4())
 
                                     itemdata = {
                                         "name":os.path.basename(filepath),
@@ -288,38 +335,6 @@ async def view(websocket: WebSocket):
                                     
                                     if Upload_dir != os.path.dirname(filepath):
                                         itemdata = None
-                                   
-                                    
-                                    new_iteminfo_record =ITEMINFO(
-                                        path = justify_path_for_db.get(filepath),
-                                        owner = owner,
-                                        type = 'file',
-                                        url_token = item_token,
-                                        isFavourite = False,
-                                    )
-
-
-
-                                    parent_shared_record = db.query(shared_items).filter(shared_items.local_token==parent_token).first()
-                                    if parent_shared_record:
-                                    
-                                        new_parent_shared_record = shared_items(
-                                            path = justify_path_for_db.get(filepath),
-                                            type = 'file',
-                                            local_token = item_token,
-                                            access_type = parent_shared_record.access_type,
-                                            allowed_by = parent_shared_record.allowed_by,
-                                            overall_access = parent_shared_record.overall_access,
-                                            owner = parent_shared_record.owner,
-                                            parent = False,
-                                            FavouriteOf = [],
-                                        )
-                                        db.add(new_parent_shared_record)
-
-
-
-                                    db.add(new_iteminfo_record)
-                                    db.commit()
 
 
                                 await websocket.send_json({'safety_lock_took_off': True, 'itemdata': itemdata, 'itemdata_parent':itemdata_parent_data})
@@ -340,9 +355,8 @@ async def view(websocket: WebSocket):
                             os.remove(filepath)
                         else:
                             chunk = data.get('bytes')
-                            with open(filepath, 'ab') as f:
-                                f.write(chunk)
-                                PAYLOAD_SIZE+=len(chunk)
+                            await asyncio.to_thread(append_chunk, filepath, chunk)
+                            PAYLOAD_SIZE+=len(chunk)
 
                         await websocket.send_json({'received': True})
 
@@ -350,6 +364,15 @@ async def view(websocket: WebSocket):
                 if filepath:
                     filepath = os.path.normpath(filepath).replace('\\','/')
                     asyncio.create_task(asyncio_drop_file(SAFETY_LOCK, filepath))
+            except Exception as e:
+                print('upload handler error', e)
+                if filepath:
+                    filepath = os.path.normpath(filepath).replace('\\','/')
+                    asyncio.create_task(asyncio_drop_file(SAFETY_LOCK, filepath))
+                try:
+                    await websocket.close()
+                except Exception:
+                    pass
 
 
             finally:
