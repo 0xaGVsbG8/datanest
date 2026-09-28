@@ -37,7 +37,7 @@ const Ask_for_upload_token = ({ call_ask_for_upload_token, path_token, files}:As
     }
 
 
-    const insufficient_space_pop_up = () => {
+    const upload_refused_pop_up = (title: string = 'Upload refused',msg: string = 'No info provided') => {
         op_confirmation_tab_context.setConfirmationData(prev=>({
             ...prev,
             title: 'insufficient space',
@@ -84,14 +84,17 @@ const Ask_for_upload_token = ({ call_ask_for_upload_token, path_token, files}:As
 
                 body:JSON.stringify({
                     path_token: path_token,
-                    packsize: packsize / (1024*1024),
+                    // packsize: packsize / (1024*1024),
+                    'packsize': packsize,
                     filter_by:  is_shared_filter() ? 'shared' : 'off'
                 })
             })
             const data = await response.json()
-            if(!data){access_denied_pop_up(); return}
-            if(data.insufficient_space){insufficient_space_pop_up(); return}
-            if(!data.token){access_denied_pop_up(); return}
+            // if(!data){access_denied_pop_up(); return}
+            // if(data.insufficient_space){insufficient_space_pop_up(); return}
+            if(data.upload_refused){upload_refused_pop_up(data.err_msg); return}
+            // if(!data.token){access_denied_pop_up(); return}
+            // if(!data){access_denied_pop_up(); return}
 
             const token = data.token
             set_received_token(token)

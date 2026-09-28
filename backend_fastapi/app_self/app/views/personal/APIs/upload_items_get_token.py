@@ -90,8 +90,11 @@ async def view(request: Request, userdata: userdata, background_tasks: Backgroun
 
 
     if path:
-        if not userdata.packsize > await read_cfg_json.get_max_upload_size():
-            if get_folder_size(path) + userdata.packsize < await read_cfg_json.get_max_storage_per_acc():
+        max_upload_size = await read_cfg_json.get_max_upload_size()
+        max_storage_per_acc = await read_cfg_json.get_max_storage_per_acc()
+        print(userdata.packsize, max_upload_size,'wxss')
+        if not userdata.packsize > max_upload_size:
+            if get_folder_size(path) + userdata.packsize < max_storage_per_acc:
 
                 print('Uploader accepted!')
                 token = str(uuid.uuid4())
@@ -110,9 +113,13 @@ async def view(request: Request, userdata: userdata, background_tasks: Backgroun
 
                 
                 return {"token" : token}
+        else:
+            msg = f'This file is larger than allowed max upload size\nYou file size: {userdata.packsize / (1024*1024)}MBs\nUpload size limit: {max_upload_size}'
+            print(msg)
+            return {'upload_refused': True, 'err_msg': msg}
     
         print('insufficient space on users disk!')
-        return {'result':'insufficient_space'}
+        # return {'result':'insufficient_space'}
 
 
 

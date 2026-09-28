@@ -57,6 +57,8 @@ services:
     #   - "9002:9002"
     volumes:
       - ./backend_fastapi/app_self/__STORAGE_VAULT:/app/__STORAGE_VAULT
+      - ./backend_fastapi/app_self/:/app
+
     depends_on:
       - postgres
       - redis
@@ -71,6 +73,8 @@ services:
     restart: unless-stopped
     # ports:
     #   - "9001:9001"
+    volumes:
+      - ./frontend_next/app_self:/app
     networks:
       - datanest_net
 
