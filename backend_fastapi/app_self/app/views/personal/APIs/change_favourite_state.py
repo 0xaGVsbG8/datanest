@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Query, HTTPException, Request
-from app_independencies import Request
+from app_dependencies import Request
 
 router = APIRouter()
 import ast

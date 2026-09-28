@@ -74,6 +74,7 @@ const Erase_disk_mod = () => {
             ...prev,
             title: 'Confirmation',
             show_confirmation_tab: true,
+            unlock_container_afterwards: false,
             content_msg: `Are you sure that you want to erase your whole disk data? This action is irreversible!`,
             confirm_btn_className: 'op_confirmation_tab-del-btn',
             confirm_btn_content: 'Confirm',

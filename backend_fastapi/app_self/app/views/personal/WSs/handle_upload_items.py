@@ -10,11 +10,12 @@ from modules.format_size import get_folder_size
 import uuid
 import asyncio
 import os, json
-from views.personal.APIs.upload_items_get_token import upload_token_data_ls
+# from views.personal.APIs.upload_items_get_token import upload_token_data_ls
 from starlette.websockets import WebSocketDisconnect
-from modules import find_new_item_path, read_cfg_json, justify_path_for_db
+from modules import find_new_item_path, read_cfg_json, justify_path_for_db, manage_redis
 from views.personal.middlewares.protect_storage_resrc import STORAGE_PREFIX
 from views.personal.APIs.get_items import blank_item_alias
+
 
 def drop_file(path: os.path):
     if os.path.exists(path):
@@ -97,7 +98,7 @@ async def view(websocket: WebSocket):
     if access_token:
         path = None
         print(access_token, '<-access token!')
-        for record in upload_token_data_ls:
+        for record in manage_redis.read_upload_token_data_ls():
             if record['token'] == access_token: 
                 print('token verified!')
                 path = record['path']
@@ -140,7 +141,7 @@ async def view(websocket: WebSocket):
                         if filepath:
                             if os.path.exists(filepath):
                                 asyncio.create_task(asyncio_drop_file(SAFETY_LOCK, filepath))
-                                
+                        
                         break
 
                     if data.get('text'):
@@ -167,7 +168,7 @@ async def view(websocket: WebSocket):
                                         filepath = find_new_item_path.get(filepath)
 
 
-                             
+                     
                                 else:
 
                                     # if not parent_created:
@@ -175,7 +176,7 @@ async def view(websocket: WebSocket):
 
                                     if default_first_parent is None:
                                         default_first_parent = itemdata_parent_dir_received
-                                    
+                            
                                     if first_prior_parent is not None and default_first_parent is not None:
                                         itemdata_parent_dir_received = itemdata_parent_dir_received.replace(default_first_parent, first_prior_parent + '/', 1)
 
@@ -206,7 +207,7 @@ async def view(websocket: WebSocket):
                                     if not itemdata_parent_data:
 
                                         itemdata_parent_dir_token =  str(uuid.uuid4())
-                                        
+                                
                                         new_record_data = {
                                             'path' : justify_path_for_db.get(itemdata_parent_dir),
                                             'owner' :  owner,
@@ -215,7 +216,7 @@ async def view(websocket: WebSocket):
                                             'isFavourite' : False,
                                         }
 
-                                        
+                                
 
                                         new_record = ITEMINFO(
                                             **new_record_data
@@ -224,7 +225,7 @@ async def view(websocket: WebSocket):
 
                                         parent_shared_record = db.query(shared_items).filter(shared_items.local_token==parent_token).first()
                                         if parent_shared_record:
-                                        
+                                
                                             new_parent_shared_record = shared_items(
                                                 path = justify_path_for_db.get(itemdata_parent_dir),
                                                 type = 'dir',
@@ -243,7 +244,7 @@ async def view(websocket: WebSocket):
 
                                         db.add(new_record)
                                         db.commit()
-                                
+                        
 
 
                                     filepath = os.path.join(itemdata_parent_dir, bare_name)
@@ -259,7 +260,7 @@ async def view(websocket: WebSocket):
                                 else:
                                     item_token = register_item_in_db(db, filepath, owner, parent_token, 'file')
 
-                                
+                        
                                 await websocket.send_json({'registered': True})
 
 
@@ -282,7 +283,7 @@ async def view(websocket: WebSocket):
 
 
                             if 'safety_lock' in data:
-                                
+                        
                                 SAFETY_LOCK = data.get('safety_lock')
                                 if not SAFETY_LOCK:
 
@@ -307,7 +308,7 @@ async def view(websocket: WebSocket):
                                         'access_url': STORAGE_PREFIX + justify_path_for_db.get(filepath),
                                     }
 
-                        
+                
 
 
 
@@ -332,14 +333,14 @@ async def view(websocket: WebSocket):
                                     else:
                                         itemdata_parent_data = None
 
-                                    
+                            
                                     if Upload_dir != os.path.dirname(filepath):
                                         itemdata = None
 
 
                                 await websocket.send_json({'safety_lock_took_off': True, 'itemdata': itemdata, 'itemdata_parent':itemdata_parent_data})
 
-                                
+                        
 
 
                             if data.get('handle_disconnect'):

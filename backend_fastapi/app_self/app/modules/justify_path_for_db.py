@@ -1,4 +1,4 @@
-from app_independencies import __STORAGE_VAULT_PATH
+from app_dependencies import __STORAGE_VAULT_PATH
 import os
 
 

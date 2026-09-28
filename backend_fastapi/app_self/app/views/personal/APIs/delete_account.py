@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, BackgroundTasks, HTTPException, Request
-from app_independencies import Request, __STORAGE_VAULT_PATH
+from app_dependencies import Request, __STORAGE_VAULT_PATH
 
 router = APIRouter()
 from sqlalchemy.orm import Session
@@ -8,6 +8,7 @@ from views.models import ITEMINFO,  User
 import os, shutil
 from db_conn import get_db
 from fastapi.responses import JSONResponse
+from modules.sessions import revoke_all_for_user, clear_session_cookie
 
 
 async def drop_dbs_records(user: str):
@@ -36,11 +37,13 @@ async def view(request: Request, bg_tasks: BackgroundTasks, db: Session = Depend
         
         result = db.query(User).filter(User.email==user).first()
         if result:
+            revoke_all_for_user(db, user)
             db.delete(result)
             db.commit()
 
 
         bg_tasks.add_task(drop_dbs_records, user)
+        clear_session_cookie(request, response)
         
 
 

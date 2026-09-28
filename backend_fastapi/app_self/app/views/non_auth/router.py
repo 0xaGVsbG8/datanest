@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app_independencies import PREFIX
+from app_dependencies import PREFIX
 from .APIs import login, register, log_out, verify_op, reset_password
 
 router = APIRouter(prefix=PREFIX)

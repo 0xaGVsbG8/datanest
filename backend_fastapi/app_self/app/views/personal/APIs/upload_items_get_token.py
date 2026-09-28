@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, BackgroundTasks, HTTPException, Request
-from app_independencies import Request, __STORAGE_VAULT_PATH
+from app_dependencies import Request, __STORAGE_VAULT_PATH
 
 router = APIRouter()
 from sqlalchemy.orm import Session
@@ -13,7 +13,7 @@ import asyncio
 import os
 from sqlalchemy import and_
 from modules.format_size import get_folder_size
-from modules import read_cfg_json
+from modules import read_cfg_json, manage_redis
 
 
 
@@ -26,18 +26,18 @@ class userdata(BaseModel):
 
 
 
-upload_token_data_ls = []
-data_lock = asyncio.Lock()
+# upload_token_data_ls = []
+# data_lock = asyncio.Lock()
 
 
-async def dump_token_data(token, delay: int = 600):
-    await asyncio.sleep(delay)
-    async with data_lock:
-        upload_token_data_ls_temp  = upload_token_data_ls.copy()
-        for i,record in enumerate(upload_token_data_ls_temp):
-            if record['token'] == token:
-                upload_token_data_ls.pop(i)
-                break
+# async def dump_token_data(token, delay: int = 600):
+#     await asyncio.sleep(delay)
+#     async with data_lock:
+#         upload_token_data_ls_temp  = upload_token_data_ls.copy()
+#         for i,record in enumerate(upload_token_data_ls_temp):
+#             if record['token'] == token:
+#                 upload_token_data_ls.pop(i)
+#                 break
 
 
 
@@ -101,9 +101,12 @@ async def view(request: Request, userdata: userdata, background_tasks: Backgroun
                     "path": path,
                     "parent_token": userdata.path_token,
                 }
-                upload_token_data_ls.append(token_data)
-                async with data_lock:
-                    background_tasks.add_task(dump_token_data, token)
+                manage_redis.dump_upload_token_data(token_data)
+                # background_tasks.add_task(manage_redis.dump_token_data, token_data)
+                # upload_token_data_ls.append(token_data)
+                # async with data_lock:
+                #     background_tasks.add_task(dump_token_data, token)
+                background_tasks.add_task(manage_redis.drop_upload_token_data,token)
 
                 
                 return {"token" : token}

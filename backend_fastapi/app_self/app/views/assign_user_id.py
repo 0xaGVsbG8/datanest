@@ -1,4 +1,4 @@
-from app_independencies import app, Request
+from app_dependencies import app, Request
 from fastapi.responses import Response
 from fastapi.websockets import WebSocket
 from starlette.responses import Response

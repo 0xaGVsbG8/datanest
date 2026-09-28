@@ -1,5 +1,5 @@
 import os,zipfile
-from app_independencies import ZIP_ARCS_PATH
+from app_dependencies import ZIP_ARCS_PATH
 from views.personal.APIs.get_items import blank_item_alias
 
 zipfile.ZIP64_LIMIT = 100 * 1024**3 

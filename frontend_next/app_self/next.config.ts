@@ -19,7 +19,6 @@ const nextConfig: NextConfig = {
     'http://localhost:9000',
     'http://localhost:9000',
     'https://berkehut.ddns.net',
-    'https://gowno.shop'
   ],
 
   // //hides console logs in production

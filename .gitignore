@@ -1,3 +1,7 @@
 composes/
 /test
 /postgres_db_docker/data
+/redis/data
+/backend_fastapi/app_self/__STORAGE_VAULT/.upload_tokens
+/backend_fastapi/app_self/__STORAGE_VAULT/USERS
+/backend_fastapi/app_self/__STORAGE_VAULT/ZIP_ARCS

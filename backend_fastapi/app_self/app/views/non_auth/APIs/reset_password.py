@@ -1,13 +1,13 @@
 
-
 from fastapi import APIRouter, Depends, BackgroundTasks, Request
-from app_independencies import SEND_MAILS
+from app_dependencies import SEND_MAILS
 from sqlalchemy.orm import Session
-from views.models import User, passcodes_info
+from views.models import User
 from db_conn import get_db
 import random
 from uuid import uuid4
 from modules import send_mail
+from modules.passcodes import store_passcode, too_many_requests
 from pydantic import EmailStr
 
 router = APIRouter()
@@ -24,16 +24,14 @@ async def send_code_task(email: str, passcode: int):
 
 @router.get('/reset_password/')
 async def view(request:Request,bg_tasks: BackgroundTasks, address: EmailStr, db: Session = Depends(get_db) ):
+    if too_many_requests(request, 'reset_password'):
+        return {'rate_limited': True}
+
     result = db.query(User).filter(User.email==address).first()
     if result:
-        passcode = ''.join([str(random.randint(0,9)) for _ in range(0,6)])
+        passcode = random.randint(100000, 999999)
         auth_token_gen = uuid4()
-        db.add(passcodes_info(
-            passcode = passcode,
-            auth_token = auth_token_gen,
-            type = 'reset_password',
-            for_user_token = result.user_token
-        ))
+        store_passcode(db, passcode, auth_token_gen, 'reset_password', result.user_token)
         db.commit()
         bg_tasks.add_task(send_code_task, result.email, passcode) if SEND_MAILS else None
         return {'auth_token': str(auth_token_gen)}
@@ -43,4 +41,3 @@ async def view(request:Request,bg_tasks: BackgroundTasks, address: EmailStr, db:
 
 
             
-

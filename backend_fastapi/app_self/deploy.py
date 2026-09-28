@@ -1,9 +1,11 @@
 
-from app.app_independencies import OS,app_path, OVERSEER_PATH, __STORAGE_VAULT_PATH, __STORAGE_VAULT_PATH_MAIN, ZIP_ARCS_PATH, ROOT_EMAIL, ROOT_PASSWD, ROOT_USER_ID
-import os,subprocess
+from app.app_dependencies import OS,app_path, OVERSEER_PATH, __STORAGE_VAULT_PATH, __STORAGE_VAULT_PATH_MAIN, ZIP_ARCS_PATH, ROOT_EMAIL, ROOT_PASSWD, ROOT_USER_ID
+import os,subprocess,sys
 from app.db_conn import get_db
+from app.redis_conn import test_redis
 from app.views.models import User
-import time, bcrypt
+import time, bcrypt, uvicorn
+
 
 DEV_BOOT = False # restarts backend after every save in files
 
@@ -56,12 +58,28 @@ def deploy_backend():
 
     finally:
         db.close()
+        
+    
+    test_redis()
+
+    subprocess.Popen(f"python {OVERSEER_PATH}", shell=True)
+    app_dir = os.path.dirname(app_path)
+    os.chdir(app_dir)
+    os.environ['PYTHONPATH'] = app_dir + os.pathsep + os.environ.get('PYTHONPATH', '')
+    if app_dir not in sys.path:
+        sys.path.insert(0, app_dir)
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=9002,
+        app_dir=app_dir,
+        workers=None if DEV_BOOT else 4,
+        ws_ping_interval=20,
+        ws_ping_timeout=60,
+        ws_max_size=16777216,
+        reload=DEV_BOOT,
+    )
 
 
-    cmd = f"python {OVERSEER_PATH}"
-    subprocess.Popen(cmd,shell=True)
-    cmd = f"cd {os.path.dirname(app_path)} && uvicorn main:app --host 0.0.0.0 --port 9002 --ws-ping-interval 20 --ws-ping-timeout 60 --ws-max-size 16777216 {'--reload' if DEV_BOOT else ''}"
-    subprocess.run(cmd,shell=True)
-
-
-deploy_backend() 
+if __name__ == '__main__':
+    deploy_backend() 

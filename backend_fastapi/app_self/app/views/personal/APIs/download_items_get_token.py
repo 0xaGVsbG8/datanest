@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, BackgroundTasks, HTTPException, Request
-from app_independencies import Request, __STORAGE_VAULT_PATH
+from app_dependencies import Request, __STORAGE_VAULT_PATH
 
 router = APIRouter()
 from sqlalchemy.orm import Session
@@ -14,7 +14,7 @@ import asyncio
 import os
 from sqlalchemy import and_
 from views.models import shared_items
-
+from modules import manage_redis
 
 
 
@@ -30,17 +30,17 @@ class RESPONSE(BaseModel):
     url_token: uuid.uuid4
     
     
-USERS_DIR_DOWNLOAD_REQUESTS_DATA:List[RESPONSE] = []
-data_lock = asyncio.Lock()
+# USERS_DIR_DOWNLOAD_REQUESTS_DATA:List[RESPONSE] = []
+# data_lock = asyncio.Lock()
     
     
-async def drop_token(token: uuid.uuid4, delay: int = 20):
-    await asyncio.sleep(delay)
-    async with data_lock:
-        for index,record in enumerate(USERS_DIR_DOWNLOAD_REQUESTS_DATA):
-            if record['url_token'] == token:
-                USERS_DIR_DOWNLOAD_REQUESTS_DATA.pop(index)
-                break
+# async def drop_token(token: uuid.uuid4, delay: int = 20):
+#     await asyncio.sleep(delay)
+#     async with data_lock:
+#         for index,record in enumerate(USERS_DIR_DOWNLOAD_REQUESTS_DATA):
+#             if record['url_token'] == token:
+#                 USERS_DIR_DOWNLOAD_REQUESTS_DATA.pop(index)
+#                 break
             
     
     
@@ -84,7 +84,7 @@ async def view(request: Request, route: route_data, background_tasks: Background
                 result = db.query(ITEMINFO).filter(ITEMINFO.url_token.in_(token_ls)).all()
                 
                 
-            token = uuid.uuid4()
+            token = str(uuid.uuid4())
             item_ls = []
             for record in result:
                 item_ls.append(record.path)
@@ -119,7 +119,7 @@ async def view(request: Request, route: route_data, background_tasks: Background
             
 
         else:
-            token = uuid.uuid4()
+            token = str(uuid.uuid4())
             token_data = {
                 'url_token': token,
                 'client_id': request.cookies['client_id'],
@@ -129,9 +129,10 @@ async def view(request: Request, route: route_data, background_tasks: Background
             }
 
             
-        async with data_lock:
-            USERS_DIR_DOWNLOAD_REQUESTS_DATA.append(token_data)
-            background_tasks.add_task(drop_token,token)
+        # async with data_lock:
+        manage_redis.dump_download_token_data(token_data)
+        # USERS_DIR_DOWNLOAD_REQUESTS_DATA.append(token_data)
+        background_tasks.add_task(manage_redis.drop_download_token_data,token)
         return {'url_token': token}
     
    

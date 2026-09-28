@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, BackgroundTasks, HTTPException, Request
-from app_independencies import Request, __STORAGE_VAULT_PATH
+from app_dependencies import Request, __STORAGE_VAULT_PATH
 
 router = APIRouter()
 import ast

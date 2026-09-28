@@ -1,6 +1,6 @@
 
 from fastapi import APIRouter, Depends, BackgroundTasks, Query, Request
-from app_independencies import Request, CONF_JSON
+from app_dependencies import Request, CONF_JSON
 
 router = APIRouter()
 from sqlalchemy.orm import Session

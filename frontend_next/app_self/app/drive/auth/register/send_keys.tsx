@@ -72,6 +72,10 @@ const Send_keys = ({setMsg, send_keys, fetching}:Send_keys_props) =>{
             })
             .then(data => {
                 let result=data
+                if(result.rate_limited){
+                    setMsg("<span style='color:red'>Too many tries. Wait a minute and try again.</span>")
+                    if(submit_btn) submit_btn.style.opacity = '1'; submit_btn.style.pointerEvents = 'auto'
+                }
                 if(result.already_exists){
                     setMsg("<span style='color:red'>E-mail address is already taken!</span>")
                     if(submit_btn) submit_btn.style.opacity = '1'; submit_btn.style.pointerEvents = 'auto'

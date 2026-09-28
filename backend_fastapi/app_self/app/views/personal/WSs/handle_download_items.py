@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request
-from app_independencies import app, Request, __STORAGE_VAULT_PATH, PREFIX, ZIP_ARCS_PATH
+from app_dependencies import app, Request, __STORAGE_VAULT_PATH, PREFIX, ZIP_ARCS_PATH
 
 router = APIRouter()
 from fastapi.responses import Response, JSONResponse
@@ -16,7 +16,8 @@ import asyncio
 import os, shutil
 from starlette.staticfiles import StaticFiles
 from sqlalchemy import and_
-from views.personal.APIs.download_items_get_token import USERS_DIR_DOWNLOAD_REQUESTS_DATA
+from modules import manage_redis
+# from views.personal.APIs.download_items_get_token import USERS_DIR_DOWNLOAD_REQUESTS_DATA
 
 
 zip_url_prefix = '/arc/startl_'
@@ -72,8 +73,8 @@ async def view(websocket: WebSocket, ):
     await asyncio.sleep(0.5)
     if route_token:
         user_data = {}
-        route_token = uuid.UUID(route_token)
-        for record in USERS_DIR_DOWNLOAD_REQUESTS_DATA:
+        route_token = str(route_token)
+        for record in manage_redis.read_download_token_data_ls():
             if record['url_token'] == route_token:
                 PATH = record['path']
                 CLIENT_ID = record['client_id']

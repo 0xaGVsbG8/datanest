@@ -90,6 +90,7 @@ const Rem_dups_mod = ({token}:Rem_dups_mod_props) => {
             ...prev,
             title: 'Confirmation',
             show_confirmation_tab: true,
+            unlock_container_afterwards: false,
             content_msg: 'Are you sure that you want to perform a duplicate files removal job on your entire disk? This action is irreversible!',
             confirm_btn_className: 'op_confirmation_tab-del-btn',
             confirm_btn_content: 'Confirm',

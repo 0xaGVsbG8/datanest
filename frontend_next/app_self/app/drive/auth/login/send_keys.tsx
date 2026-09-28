@@ -67,6 +67,10 @@ const Send_keys = ({setMsg, call_send_keys, call_me, fetching}: Send_keys_props)
                 .then(data => {
                     let result=data
 
+                    if(result.rate_limited){
+                        setMsg("<span style='color:red'>Too many tries. Wait a minute and try again.</span>")
+                        if(submit_btn) submit_btn.style.opacity = '1'; submit_btn.style.pointerEvents = 'auto'
+                    }
                     if(result.creds=='incorrect'){
                         setMsg("<span style='color:red'>Incorrect credentials!</span>")
                         if(submit_btn) submit_btn.style.opacity = '1'; submit_btn.style.pointerEvents = 'auto'

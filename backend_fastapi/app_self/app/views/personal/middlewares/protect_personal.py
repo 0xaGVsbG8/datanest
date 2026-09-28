@@ -1,10 +1,10 @@
 
-from app_independencies import app, Request
+from app_dependencies import app, Request
 from fastapi.responses import Response, JSONResponse
 from db_conn import get_db
 from modules import get_user
 from starlette.middleware.base import BaseHTTPMiddleware
-from app_independencies import TEST_ACC_FOR_DEV_PURPOSES, ALLOW_TEST_ACC_FOR_DEV_PURPOSES
+from app_dependencies import TEST_ACC_FOR_DEV_PURPOSES, ALLOW_TEST_ACC_FOR_DEV_PURPOSES
 
 personal_prefix = '/sec/'
 

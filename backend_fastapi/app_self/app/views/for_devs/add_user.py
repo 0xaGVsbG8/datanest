@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Query, Request
-from app_independencies import Request, __STORAGE_VAULT_PATH
+from app_dependencies import Request, __STORAGE_VAULT_PATH
 
 router = APIRouter()
 from sqlalchemy.orm import Session

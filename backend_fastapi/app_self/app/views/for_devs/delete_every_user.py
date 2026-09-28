@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, BackgroundTasks, Request
-from app_independencies import Request, __STORAGE_VAULT_PATH
+from app_dependencies import Request, __STORAGE_VAULT_PATH
 
 router = APIRouter()
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from fastapi import Depends, BackgroundTasks
 from db_conn import get_db
-from views.models import ITEMINFO, User, shared_items
+from views.models import ITEMINFO, User, shared_items, UserSession
 import shutil, os
 
 
@@ -19,6 +19,7 @@ async def view(request: Request,background_tasks: BackgroundTasks, db: Session =
     
     devs_emails = select(User.email).where(User.isDev == True)
     devs_emails_result = [email for (email,) in db.execute(devs_emails).all()]
+    db.query(UserSession).filter(~UserSession.user_email.in_(devs_emails_result)).delete(synchronize_session=False)
     db.query(User).filter(User.isDev == False).delete()
     db.query(ITEMINFO).filter(~ITEMINFO.owner.in_(devs_emails)).delete()
     db.query(shared_items).filter(~shared_items.owner.in_(devs_emails)).delete()

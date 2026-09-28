@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Query, Request
-from app_independencies import Request, __STORAGE_VAULT_PATH
+from app_dependencies import Request, __STORAGE_VAULT_PATH
 
 router = APIRouter()
 from sqlalchemy.orm import Session
@@ -9,7 +9,8 @@ from db_conn import get_db
 from views.models import ITEMINFO, User, shared_items
 from typing import Literal
 import shutil, os
-from app_independencies import ROOT_EMAIL
+from app_dependencies import ROOT_EMAIL
+from modules.sessions import revoke_all_for_user
 
 
 def delete_user_data(address):
@@ -52,6 +53,7 @@ async def view(
     if user:
         if action_type == 'delete':
             print(f'deleting a user --> {user}')
+            revoke_all_for_user(db, address)
             db.delete(user)
             delete_user_data(address)
 

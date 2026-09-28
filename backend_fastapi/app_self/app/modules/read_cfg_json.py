@@ -1,6 +1,6 @@
 
 
-from app_independencies import CONF_JSON
+from app_dependencies import CONF_JSON
 import aiofiles, json
 
 #used for storing upload and account settings in json db

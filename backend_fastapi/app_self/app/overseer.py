@@ -1,6 +1,6 @@
 
 from db_conn import get_db
-from app_independencies import __STORAGE_VAULT_PATH, ZIP_ARCS_PATH, ZIP_ARC_LIFESPAN
+from app_dependencies import __STORAGE_VAULT_PATH, ZIP_ARCS_PATH, ZIP_ARC_LIFESPAN
 from views.models import ITEMINFO, zipinfo, shared_items
 import os,time,shutil
 import asyncio

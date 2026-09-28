@@ -1,5 +1,5 @@
 
-from app_independencies import app, Request
+from app_dependencies import app, Request
 from fastapi.responses import Response, JSONResponse
 from db_conn import get_db
 from views.models import User
@@ -26,6 +26,8 @@ class protect_dev_scr(BaseHTTPMiddleware):
                         isDev = result.isDev
                         if isDev:
                             request.state.user = user
+                        else:
+                             return JSONResponse({'access': 'denied'})
                 else:
                     return JSONResponse({'access': 'denied'})
 

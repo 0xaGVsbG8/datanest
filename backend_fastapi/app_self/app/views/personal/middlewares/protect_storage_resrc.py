@@ -1,12 +1,12 @@
 
-from app_independencies import app, Request, __STORAGE_VAULT_PATH, PREFIX
+from app_dependencies import app, Request, __STORAGE_VAULT_PATH, PREFIX
 from fastapi.responses import Response, JSONResponse
 from db_conn import get_db
 from views.models import ITEMINFO, shared_items
 from starlette.staticfiles import StaticFiles
 from modules import get_user
 from starlette.middleware.base import BaseHTTPMiddleware
-from app_independencies import TEST_ACC_FOR_DEV_PURPOSES, ALLOW_TEST_ACC_FOR_DEV_PURPOSES
+from app_dependencies import TEST_ACC_FOR_DEV_PURPOSES, ALLOW_TEST_ACC_FOR_DEV_PURPOSES
 from sqlalchemy import and_, or_
 
 

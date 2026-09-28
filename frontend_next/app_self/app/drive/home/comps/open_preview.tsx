@@ -245,14 +245,24 @@ const Open_preview = ({record_id, name, real_size,mimetype, access_url, dispatch
 
 
     const get_text_content = async(url: string) => {
+        const max_bytes = 3 * (1024 * 1024)
         const response = await fetch(url, {
             method: 'GET',
-            credentials: 'include'
+            credentials: 'include',
+            headers: { Range: `bytes=0-${max_bytes - 1}` },
         })
 
         let content = await response.text()
+        content = content.slice(0, 1500)
         if(content.length == 0){content = '...'}
-        set_media_el(<pre>{content}</pre>)
+        const truncated = response.status === 206 || content.length >= max_bytes
+        // const truncated = response.status === 206 || content.length >= max_bytes
+        set_media_el(
+            <pre>
+                {content}
+                {truncated ? '\n\n... truncated (max 3MB preview)' : ''}
+            </pre>
+        )
     }
 
 
@@ -302,7 +312,7 @@ const Open_preview = ({record_id, name, real_size,mimetype, access_url, dispatch
                     backgroundColor:'transparent',
                 boxShadow:'none',
 
-                }}>No display</div>
+                }}>No display, file type cant be displayed. Forcing to download a text content might crash this site.</div>
                 <button style={{
                     backgroundColor:'transparent',
                     color:'aqua',

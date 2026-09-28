@@ -2,14 +2,16 @@
 
 from fastapi import APIRouter, Depends, BackgroundTasks, Request
 from fastapi.responses import Response
-from app_independencies import SEND_MAILS, ROOT_EMAIL, ROOT_PASSWD, ROOT_USER_ID, ALLOW_TEST_ACC_FOR_DEV_PURPOSES, TEST_ACC_FOR_DEV_PURPOSES
+from app_dependencies import SEND_MAILS, ROOT_EMAIL, ROOT_PASSWD, ALLOW_TEST_ACC_FOR_DEV_PURPOSES, TEST_ACC_FOR_DEV_PURPOSES
 from sqlalchemy.orm import Session
-from views.models import User as model_user, passcodes_info
+from views.models import User as model_user
 import bcrypt
 from db_conn import get_db
 import random
 from uuid import uuid4
 from modules import send_mail
+from modules.sessions import create_session, set_session_cookie
+from modules.passcodes import store_passcode, too_many_requests
 from pydantic import EmailStr, BaseModel
 from typing import Optional
 from uuid import UUID
@@ -31,6 +33,9 @@ async def send_code_task(email: str, passcode: int):
 
 @router.post('/login/')
 async def view(request:Request, bg_tasks: BackgroundTasks, response: Response, userdata: login_data, db: Session = Depends(get_db)):
+    if too_many_requests(request, 'login'):
+        return {'rate_limited': True}
+
     email = userdata.email
 
     #If test account detected user just needs to refresh a page no need to authenticate with an email passcode        
@@ -53,32 +58,21 @@ async def view(request:Request, bg_tasks: BackgroundTasks, response: Response, u
     if email == ROOT_EMAIL and passwd.decode('utf-8') == ROOT_PASSWD:
 
         id_from_db = db.query(model_user).filter(model_user.email==ROOT_EMAIL).first()
-        
-        response.set_cookie(
-            key = 'user_token',
-            value = id_from_db.user_token if id_from_db else ROOT_USER_ID,
-            httponly = True,
-            max_age=60*60*24*365*10,
-            path = '/'
-        )
-        
-        return {'loged_in': True}
+        if id_from_db:
+            session_token = create_session(db, id_from_db.email)
+            db.commit()
+            set_session_cookie(request, response, session_token)
+            return {'loged_in': True}
 
     
     user_creds = db.query(model_user).filter(model_user.email==email).first()
     if user_creds:
         if bcrypt.checkpw(passwd,user_creds.password.encode('utf-8')):
-            passcode = ''.join([str(random.randint(0,9)) for _ in range(0,6)])
+            passcode = random.randint(100000, 999999)
             auth_token_gen = uuid4()
             userdata.auth_token = auth_token_gen
 
-
-            db.add(passcodes_info(
-                passcode = passcode,
-                auth_token = auth_token_gen,
-                type = 'login',
-                for_user_token = user_creds.user_token
-            ))
+            store_passcode(db, passcode, auth_token_gen, 'login', user_creds.user_token)
 
             db.commit()
 

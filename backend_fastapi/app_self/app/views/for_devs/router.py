@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app_independencies import PREFIX
+from app_dependencies import PREFIX
 from . import (
     get_dev_data, update_limit, restart_service, format_disk,
     delete_every_user, add_user, manage_user

@@ -31,16 +31,34 @@ const Send_keys = ({passcode, auth_token, call_me, set_msg}:Send_keys_props) => 
         try{
             if(submit_btn) {submit_btn.style.opacity = '0.6'; submit_btn.style.pointerEvents = 'none'}
             pulling.current = true
-            const response = await fetch(base_fetch_url+`/verify_op/?auth_token=${auth_token}&passcode=${passcode}`,{
-                method:'GET',
+            const response = await fetch(base_fetch_url+'/verify_op/',{
+                method:'POST',
                 credentials:'include',
                 headers:{
                     "Content-Type": "application/json",
                     "protocol":"init"
                 },
-            
+                body: JSON.stringify({
+                    auth_token,
+                    passcode: Number(passcode),
+                }),
             })
             const data = await response.json()
+            if(data.rate_limited){
+                set_msg('<span style="color:red">Too many tries. Wait a minute and try again.</span>')
+                if(submit_btn) {submit_btn.style.opacity = '1'; submit_btn.style.pointerEvents = 'auto'}
+                return
+            }
+            if(data.passcode_expired){
+                set_msg('<span style="color:red">This code expired. Request a new one.</span>')
+                if(submit_btn) {submit_btn.style.opacity = '1'; submit_btn.style.pointerEvents = 'auto'}
+                return
+            }
+            if(data.too_many_attempts){
+                set_msg('<span style="color:red">Too many wrong codes. Request a new one.</span>')
+                if(submit_btn) {submit_btn.style.opacity = '1'; submit_btn.style.pointerEvents = 'auto'}
+                return
+            }
             if(data.passcode_incorrect){
                 set_msg('<span style="color:red">Incorrect passcode!</span>')
                 if(submit_btn) {submit_btn.style.opacity = '1'; submit_btn.style.pointerEvents = 'auto'}

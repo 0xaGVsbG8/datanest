@@ -2,6 +2,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+try:
+    from views.models import UserSession
+except ModuleNotFoundError:
+    from app.views.models import UserSession
+
 
 
 #FOR DOCKER USAGE without compose
@@ -31,18 +36,10 @@ def get_db():
 
 
 def log_out_every_user():
-    from views.models import User
-    from uuid import uuid4
-
     print('logging every user out!')
 
-    db_local = SessionLocal() 
-    users = db_local.query(User).all()
-
-    for user in users:
-        new_token = uuid4()
-        user.user_token = new_token
-
+    db_local = SessionLocal()
+    db_local.query(UserSession).delete()
     db_local.commit()
     db_local.close()
 

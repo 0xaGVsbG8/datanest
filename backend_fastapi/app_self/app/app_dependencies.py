@@ -8,7 +8,7 @@ PREFIX='/backend'
 
 
 ROOT_EMAIL = 'root@dash.io'
-ROOT_PASSWD = 'Liduka35'
+ROOT_PASSWD = 'your_password_goes_here'
 ROOT_USER_ID = str(uuid4())
 
 
@@ -18,6 +18,7 @@ OVERSEER_PATH = os.path.join(os.path.dirname(__file__),'overseer.py')
 DEPLOY_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)),'deploy.py')
 
 SEND_MAILS = True
+#ITS FOR PUBLIC USE
 SENDER_EMAIL = "fuzzdisk@gmail.com"
 SENDER_EMAIL_PASSWORD = "avhi wyig ptvo mthg" #Gmail account app code
  
@@ -55,9 +56,9 @@ ZIP_ARCS_PATH = (os.path.join(__STORAGE_VAULT_PATH_MAIN, 'ZIP_ARCS')).replace('\
 
 
 app = FastAPI(
-    # docs_url=None,
-    # redoc_url=None,
-    # openapi_url=False
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=False
 )
 #unmark those to disable public docs
 
@@ -78,7 +79,6 @@ origins = [
     'http://localhost:9000',
     'http://localhost:9001',
     'https://berkehut.ddns.net',
-    'https://gowno.shop',
     'http://berkehut.ddns.net',
 ]
 

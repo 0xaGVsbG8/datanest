@@ -1,13 +1,12 @@
 
 
-
 from fastapi import APIRouter, Request
-from app_independencies import PREFIX, Request
+from app_dependencies import PREFIX, Request
 from functools import wraps
 from db_conn import get_db
 from views.models import User
-from uuid import UUID
-from app_independencies import ALLOW_TEST_ACC_FOR_DEV_PURPOSES, TEST_ACC_FOR_DEV_PURPOSES, __STORAGE_VAULT_PATH
+from app_dependencies import ALLOW_TEST_ACC_FOR_DEV_PURPOSES, TEST_ACC_FOR_DEV_PURPOSES, __STORAGE_VAULT_PATH
+from modules import get_user
 import os
 
 router = APIRouter(prefix=PREFIX)
@@ -16,15 +15,13 @@ def auth_validator(func):
     @wraps(func)
     async def wrapper(*args,**kwargs):
         if kwargs.get('request'):
-            cookies = kwargs['request'].cookies
+            request = kwargs['request']
+            cookies = request.cookies
             db = next(get_db())
             try:
                 if not cookies.get('test_acc'):
-                    if cookies.get('user_token'):
-                        user_token = UUID(cookies.get('user_token'))
-                        result = db.query(User).filter(User.user_token==user_token).first()
-                        if result:
-                            return await func(*args,**kwargs)
+                    if get_user.get(request, db):
+                        return await func(*args,**kwargs)
                         
                 else:
                     if not ALLOW_TEST_ACC_FOR_DEV_PURPOSES:

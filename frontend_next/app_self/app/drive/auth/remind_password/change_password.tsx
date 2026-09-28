@@ -30,17 +30,29 @@ const Change_password_view = () => {
         if(pulling.current) return
         pulling.current = true
 
-        const response = await fetch(base_fetch_url+`/verify_op/?auth_token=${user_data?.auth_token}&passcode=${user_data?.passcode}&new_password=${passcode_input1.current.value}`,{
-            method:'GET',
+        const response = await fetch(base_fetch_url+'/verify_op/',{
+            method:'POST',
             credentials:'include',
             headers:{
                 "Content-Type": "application/json",
                 "protocol":"init"
             },
-           
+            body: JSON.stringify({
+                auth_token: user_data?.auth_token,
+                passcode: Number(user_data?.passcode),
+                new_password: passcode_input1.current.value,
+            }),
         })
         pulling.current = false
         const data = await response.json()
+        if(data.rate_limited) {
+            set_msg('<span style="color:red">Too many tries. Wait a minute and try again.</span>')
+            return
+        }
+        if(data.passcode_expired || data.too_many_attempts) {
+            set_msg('<span style="color:red">This code expired. Request a new one.</span>')
+            return
+        }
         if(data.password_changed) {
             passcode_input1.current.value = ''
             passcode_input2.current.value = ''

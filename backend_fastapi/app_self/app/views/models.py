@@ -27,7 +27,20 @@ class User(Base):
         self.isDev = isDev
         if user_token:
             self.user_token = user_token
-    
+
+
+class UserSession(Base):
+    __tablename__ = 'user_sessions'
+    id = Column(Integer, primary_key=True, index=True)
+    token = Column(UUID(as_uuid=True), unique=True, index=True, nullable=False, default=uuid.uuid4)
+    user_email = Column(String, index=True, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    expires_at = Column(DateTime, nullable=False)
+
+    def __init__(self, token, user_email, expires_at):
+        self.token = token
+        self.user_email = user_email
+        self.expires_at = expires_at
 
 
 class ITEMINFO(Base):
@@ -103,11 +116,16 @@ class passcodes_info(Base):
     passcode = Column(Integer)
     auth_token = Column(UUID(as_uuid=True), default=uuid.uuid4)
     type = Column(Enum('login', 'register','reset_password', name='type_enum'))
+    #points to which  user it belogns to
     for_user_token = Column(String)
+    expires_at = Column(DateTime)
+    attempts = Column(Integer, default=0)
 
-    def __init__(self, passcode, auth_token, type, for_user_token):
+    def __init__(self, passcode, auth_token, type, for_user_token, expires_at=None, attempts=0):
         self.passcode = passcode
         self.auth_token = auth_token
         self.type = type
         self.for_user_token = for_user_token
+        self.expires_at = expires_at
+        self.attempts = attempts
     

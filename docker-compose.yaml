@@ -21,8 +21,8 @@ services:
       dockerfile: Dockerfile
     container_name: datanestDB_postgres
     restart: unless-stopped
-    ports:
-      - "9003:5432"
+    # ports:
+    #   - "9003:5432"
     volumes:
       - ./postgres_db_docker/data:/var/lib/postgresql/db_data
     environment:
@@ -32,18 +32,32 @@ services:
     networks:
       - datanest_net
 
+  redis:
+    build:
+      context: ./redis
+      dockerfile: Dockerfile
+    container_name: redistest
+    restart: unless-stopped
+    # ports:
+    #   - "6379:6379"
+    volumes:
+      - ./redis/data:/data
+    networks:
+      - datanest_net
+
   fastapi_backend:
     build:
       context: ./backend_fastapi
       dockerfile: Dockerfile
     container_name: fastapi_backend
     restart: unless-stopped
-    ports:
-      - "9002:9002"
+    # ports:
+    #   - "9002:9002"
     volumes:
       - ./backend_fastapi/app_self/__STORAGE_VAULT:/app/__STORAGE_VAULT
     depends_on:
       - postgres
+      - redis
     networks:
       - datanest_net
 
@@ -53,10 +67,11 @@ services:
       dockerfile: Dockerfile
     container_name: next_frontend
     restart: unless-stopped
-    ports:
-      - "9001:9001"
+    # ports:
+    #   - "9001:9001"
     networks:
       - datanest_net
+
 
 networks:
   datanest_net:

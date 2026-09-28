@@ -65,6 +65,11 @@ const Send_keys = ({setMsg, send_keys}: Send_keys_props) => {
             })
             const data = await response.json()
             console.log(data)
+            if(data.rate_limited) {
+                setMsg('<span style="color:red">Too many tries. Wait a minute and try again.</span>')
+                if(submit_btn) submit_btn.style.opacity = '1'; submit_btn.style.pointerEvents = 'auto'
+                return
+            }
             if(data.auth_token) {set_auth_token(data.auth_token); set_show_tab('passcode'); return}
             if(!data.found_address) {
                 setMsg('<span style="color:red">Account with such an address doesnt exists!</span>')
