@@ -9,6 +9,8 @@ services:
     restart: unless-stopped
     ports:
       - "9000:9000"
+    volumes:
+      - ./backend_fastapi/app_self/__STORAGE_VAULT:/storage_vault:ro
     depends_on:
       - next_frontend
       - fastapi_backend
