@@ -9,13 +9,14 @@ from typing import Optional
 from uuid import UUID
 import json
 import bcrypt
-from datetime import datetime
 from modules.sessions import create_session, set_session_cookie, revoke_all_for_user
 from modules.passcodes import (
     MAX_PASSCODE_ATTEMPTS,
+    as_utc,
     drop_passcode,
     ensure_columns,
     too_many_requests,
+    utc_now,
 )
 
 router = APIRouter()
@@ -41,7 +42,7 @@ async def view(request: Request, response: Response, userdata: verify_op_data, d
     result = db.query(passcodes_info).filter(passcodes_info.auth_token == auth_token).first()
     # print(result.passcode, '<--- correct passcode, received passcode --->', passcode)
     if result:
-        if not result.expires_at or result.expires_at <= datetime.utcnow():
+        if not result.expires_at or as_utc(result.expires_at) <= utc_now():
             drop_passcode(db, result)
             return {'passcode_expired': True}
 

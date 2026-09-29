@@ -1,11 +1,10 @@
-from collections import defaultdict, deque
-from datetime import datetime, timedelta
-from time import time
+from datetime import datetime, timedelta, timezone
 from uuid import UUID
 from fastapi.requests import Request
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 from views.models import passcodes_info
+from modules import manage_redis
 
 PASSCODE_TTL_SECONDS = 15 * 60
 MAX_PASSCODE_ATTEMPTS = 5
@@ -13,7 +12,16 @@ RATE_LIMIT = 10
 RATE_WINDOW_SECONDS = 60
 
 _table_ready = False
-_hits = defaultdict(deque)
+
+
+def utc_now():
+    return datetime.now(timezone.utc)
+
+
+def as_utc(dt: datetime) -> datetime:
+    if dt.tzinfo is None:
+        return dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone.utc)
 
 
 def ensure_columns():
@@ -45,20 +53,16 @@ def client_ip(request: Request) -> str:
 
 
 def too_many_requests(request: Request, bucket: str) -> bool:
-    key = f'{bucket}:{client_ip(request)}'
-    now = time()
-    q = _hits[key]
-    while q and q[0] <= now - RATE_WINDOW_SECONDS:
-        q.popleft()
-    if len(q) >= RATE_LIMIT:
+    key = f'auth:{bucket}:{client_ip(request)}'
+    try:
+        return manage_redis.rate_limit_exceeded(key, RATE_LIMIT, RATE_WINDOW_SECONDS)
+    except Exception:
         return True
-    q.append(now)
-    return False
 
 
 def store_passcode(db: Session, passcode, auth_token: UUID, op_type: str, for_user_token):
     ensure_columns()
-    now = datetime.utcnow()
+    now = utc_now()
     db.query(passcodes_info).filter(
         passcodes_info.expires_at.isnot(None),
         passcodes_info.expires_at <= now

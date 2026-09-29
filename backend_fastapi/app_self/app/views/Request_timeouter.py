@@ -2,21 +2,11 @@ from app_dependencies import app, Request
 from fastapi.responses import JSONResponse
 from fastapi import status
 from starlette.middleware.base import BaseHTTPMiddleware
-from pydantic import BaseModel
-import time
-from typing import Dict
+from modules import manage_redis
 
 
 MAX_REQUESTS_AMOUNT = 40
 MAX_REQUESTS_PER = 6  # secs
-
-
-class client_data_props(BaseModel):
-    first_request: float
-    requests_amount: int
-
-
-clients_data: Dict[str, client_data_props] = {}
 
 
 def client_ip(request: Request) -> str:
@@ -32,23 +22,13 @@ def client_ip(request: Request) -> str:
 class Requests_timeouter(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         ip = client_ip(request)
-        now = time.time()
-
-        if ip not in clients_data:
-            clients_data[ip] = client_data_props(
-                first_request=now,
-                requests_amount=0,
+        try:
+            over = manage_redis.rate_limit_exceeded(
+                f'http:{ip}', MAX_REQUESTS_AMOUNT, MAX_REQUESTS_PER
             )
-
-        client_data = clients_data[ip]
-
-        if now - client_data.first_request > MAX_REQUESTS_PER:
-            client_data.first_request = now
-            client_data.requests_amount = 0
-
-        client_data.requests_amount += 1
-
-        if client_data.requests_amount > MAX_REQUESTS_AMOUNT:
+        except Exception:
+            over = False
+        if over:
             return JSONResponse(
                 {"detail": "Too many requests"},
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,

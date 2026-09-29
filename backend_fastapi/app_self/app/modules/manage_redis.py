@@ -5,6 +5,14 @@ import asyncio
 from . import get_user
 import time
 
+
+def rate_limit_exceeded(key: str, limit: int, window_secs: int) -> bool:
+    redis_key = f'rl:{key}'
+    n = r_conn.incr(redis_key)
+    if n == 1 or r_conn.ttl(redis_key) < 0:
+        r_conn.expire(redis_key, int(window_secs))
+    return n > limit
+
 #IN CASE CLEAN UP DOESNT WORK CORRECTLY
 RESET_CACHE_AFTER = 12 * 60 * 60 #(hours)
 

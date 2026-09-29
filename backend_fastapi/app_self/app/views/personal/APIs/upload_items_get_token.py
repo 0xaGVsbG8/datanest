@@ -104,7 +104,7 @@ async def view(request: Request, userdata: userdata, background_tasks: Backgroun
                     print('uploades in que exceed total avaible space left')
                     msg = f"""
                     Uploades in que exceed total avaible space left on this account,
-                    This file: {userdata.packsize / (1024*1024):.2f}MBs,
+                    This upload: {userdata.packsize / (1024*1024):.2f}MBs,
                     Uploads in que: {USER_CACHED_UPLOAD_SIZE / (1024*1024):.2f}MBs,
                     Your storage left: {((max_storage_per_acc - acc_dir_size)) / (1024*1024):.2f}MBs.
                     """
@@ -134,7 +134,7 @@ async def view(request: Request, userdata: userdata, background_tasks: Backgroun
             else:
                 print('too big for storage')
                 msg = f"""
-                This file is larger than your account storage left, this file size: {userdata.packsize / (1024*1024):.2f}MBs.
+                This upload is larger than your account storage left, this upload size: {userdata.packsize / (1024*1024):.2f}MBs.
                 Your storage left: {(max_storage_per_acc - acc_dir_size) / (1024*1024):.2f}MBs.
                 """
                 return {'upload_refused': True, 'err_title':'Upload refused','err_msg': msg}
@@ -142,8 +142,8 @@ async def view(request: Request, userdata: userdata, background_tasks: Backgroun
             
         else:
             msg = f"""
-            This file is larger than allowed max upload size.
-            You file size: {userdata.packsize / (1024*1024):.2f}MBs.
+            This upload is larger than allowed max upload size.
+            You upload size: {userdata.packsize / (1024*1024):.2f}MBs.
             Upload size limit: {max_upload_size  / (1024*1024):.2f}MBs.
             """
             # print(msg)
