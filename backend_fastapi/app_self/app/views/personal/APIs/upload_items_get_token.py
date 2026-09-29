@@ -14,7 +14,7 @@ import os
 from sqlalchemy import and_
 from modules.format_size import get_folder_size
 from modules import read_cfg_json, manage_redis
-
+from modules import get_user
 
 
 
@@ -94,15 +94,31 @@ async def view(request: Request, userdata: userdata, background_tasks: Backgroun
         max_storage_per_acc = await read_cfg_json.get_max_storage_per_acc()
         print(userdata.packsize, max_upload_size,'wxss')
         if not userdata.packsize > max_upload_size:
-            if get_folder_size(path) + userdata.packsize < max_storage_per_acc:
-
-                print('Uploader accepted!')
+            acc_dir_size = get_folder_size(path)
+            # print(acc_dir_size, 'xdd')
+            if acc_dir_size + userdata.packsize < max_storage_per_acc:
+                
+                
+                USER_CACHED_UPLOAD_SIZE = manage_redis.get_user_cached_upload_size(user)
+                if USER_CACHED_UPLOAD_SIZE + userdata.packsize > max_storage_per_acc:
+                    print('uploades in que exceed total avaible space left')
+                    msg = f"""
+                    Uploades in que exceed total avaible space left on this account,
+                    This file: {userdata.packsize / (1024*1024):.2f}MBs,
+                    Uploads in que: {USER_CACHED_UPLOAD_SIZE / (1024*1024):.2f}MBs,
+                    Your storage left: {((max_storage_per_acc - acc_dir_size)) / (1024*1024):.2f}MBs.
+                    """
+                    return {'upload_refused': True, 'err_title':'Upload refused','err_msg': msg}
+                
+                print('Uploader accepted!', USER_CACHED_UPLOAD_SIZE)
                 token = str(uuid.uuid4())
                 token_data = {
                     "token": token,
                     "owner": OWNER,
                     "path": path,
                     "parent_token": userdata.path_token,
+                    "user": user,
+                    "packsize": userdata.packsize,
                 }
                 manage_redis.dump_upload_token_data(token_data)
                 # background_tasks.add_task(manage_redis.dump_token_data, token_data)
@@ -110,13 +126,28 @@ async def view(request: Request, userdata: userdata, background_tasks: Backgroun
                 # async with data_lock:
                 #     background_tasks.add_task(dump_token_data, token)
                 background_tasks.add_task(manage_redis.drop_upload_token_data,token)
-
+                
+                manage_redis.store_upload_size(user, userdata.packsize)
                 
                 return {"token" : token}
+            
+            else:
+                print('too big for storage')
+                msg = f"""
+                This file is larger than your account storage left, this file size: {userdata.packsize / (1024*1024):.2f}MBs.
+                Your storage left: {(max_storage_per_acc - acc_dir_size) / (1024*1024):.2f}MBs.
+                """
+                return {'upload_refused': True, 'err_title':'Upload refused','err_msg': msg}
+                
+            
         else:
-            msg = f'This file is larger than allowed max upload size\nYou file size: {userdata.packsize / (1024*1024)}MBs\nUpload size limit: {max_upload_size}'
-            print(msg)
-            return {'upload_refused': True, 'err_msg': msg}
+            msg = f"""
+            This file is larger than allowed max upload size.
+            You file size: {userdata.packsize / (1024*1024):.2f}MBs.
+            Upload size limit: {max_upload_size  / (1024*1024):.2f}MBs.
+            """
+            # print(msg)
+            return {'upload_refused': True, 'err_title':'Upload refused','err_msg': msg}
     
         print('insufficient space on users disk!')
         # return {'result':'insufficient_space'}

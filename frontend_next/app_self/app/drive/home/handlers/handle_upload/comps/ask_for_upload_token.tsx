@@ -40,9 +40,9 @@ const Ask_for_upload_token = ({ call_ask_for_upload_token, path_token, files}:As
     const upload_refused_pop_up = (title: string = 'Upload refused',msg: string = 'No info provided') => {
         op_confirmation_tab_context.setConfirmationData(prev=>({
             ...prev,
-            title: 'insufficient space',
+            title: title,
             show_confirmation_tab: true,
-            content_msg: `Not enough space left on this storage!`,
+            content_msg: msg,
             confirm_btn_className: 'op_confirmation_tab-del-btn',
             confirm_btn_content: 'Confirm',
             confirm_behaviour: ()=>{},
@@ -71,6 +71,7 @@ const Ask_for_upload_token = ({ call_ask_for_upload_token, path_token, files}:As
         }
 
         packsize = packsize_ref.current
+        // packsize_ref.current = 0
         
 
         try{
@@ -92,12 +93,13 @@ const Ask_for_upload_token = ({ call_ask_for_upload_token, path_token, files}:As
             const data = await response.json()
             // if(!data){access_denied_pop_up(); return}
             // if(data.insufficient_space){insufficient_space_pop_up(); return}
-            if(data.upload_refused){upload_refused_pop_up(data.err_msg); return}
+            if(data.upload_refused){packsize_ref.current = 0; upload_refused_pop_up(data.err_title, data.err_msg); return}
             // if(!data.token){access_denied_pop_up(); return}
             // if(!data){access_denied_pop_up(); return}
 
             const token = data.token
             set_received_token(token)
+            
             set_call_for_begin_upload(c=>c+1)
             return token
 

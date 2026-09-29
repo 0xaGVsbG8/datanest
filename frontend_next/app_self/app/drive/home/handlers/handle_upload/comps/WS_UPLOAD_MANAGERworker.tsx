@@ -299,6 +299,7 @@ const Begin_upload = ({upload_token, call_for_begin_upload}:Begin_upload_props) 
             if(files) set_operations_count(c=>c+1)
 
             const here_packsize: number =  packsize_ref.current
+            packsize_ref.current = 0
 
             for(const [id, item] of files.entries()){
                 const bare_name: string = item.name

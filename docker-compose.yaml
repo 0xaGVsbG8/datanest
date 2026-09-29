@@ -42,8 +42,8 @@ services:
     restart: unless-stopped
     # ports:
     #   - "6379:6379"
-    volumes:
-      - ./redis/data:/data
+    # volumes:
+      # - ./redis/data:/data
     networks:
       - datanest_net
 
@@ -53,6 +53,9 @@ services:
       dockerfile: Dockerfile
     container_name: fastapi_backend
     restart: unless-stopped
+    environment:
+      WATCHPACK_POLLING: "true"
+      CHOKIDAR_USEPOLLING: "true"
     # ports:
     #   - "9002:9002"
     volumes:
@@ -71,10 +74,13 @@ services:
       dockerfile: Dockerfile
     container_name: next_frontend
     restart: unless-stopped
+    environment:
+      WATCHPACK_POLLING: "true"
+      CHOKIDAR_USEPOLLING: "true"
     # ports:
     #   - "9001:9001"
     volumes:
-      - ./frontend_next/app_self:/app
+      - ./frontend_next/app_self/app:/app/app
     networks:
       - datanest_net
 

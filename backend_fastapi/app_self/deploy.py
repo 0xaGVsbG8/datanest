@@ -7,7 +7,7 @@ from app.views.models import User
 import time, bcrypt, uvicorn
 
 
-DEV_BOOT = False # restarts backend after every save in files
+DEV_BOOT = True # restarts backend after every save in files
 
 
 def deploy_backend():

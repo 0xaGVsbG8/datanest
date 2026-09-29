@@ -4,7 +4,7 @@ import Ask_for_upload_token from "./comps/ask_for_upload_token"
 import Begin_upload from "./comps/WS_UPLOAD_MANAGERworker"
 
 export const FILE_INPUTS_CLASSNAME = '.file-inputer'
-export const CHUNK_SIZE = 1 * (1024*1024) // 1MB websocket frames
+export const CHUNK_SIZE = 15 * (1024*1024) // 1MB websocket frames
 
 export const BLANK_FILE_NAME  = 'BLANK_1x3100012131312311sd112nnnnnnx'
 
@@ -178,7 +178,7 @@ const Handle_upload_comp = ({path_token}:Handle_upload_comp_props) => {
             }}>
 
                 {call_ask_for_upload_token != 0 && UserFileList && <Ask_for_upload_token call_ask_for_upload_token={call_ask_for_upload_token} files={UserFileList} path_token={path_token}></Ask_for_upload_token>}
-                {received_token !== null && <Begin_upload upload_token = {received_token} call_for_begin_upload={call_ask_for_upload_token}></Begin_upload>}
+                {received_token !== null && <Begin_upload upload_token = {received_token} call_for_begin_upload={call_for_begin_upload}></Begin_upload>}
             
             </handle_upload_common_context.Provider>
         </>

@@ -117,7 +117,6 @@ const View = () => {
                 </div>
             </div>
 
-
             <div id="selection-panel">
 
                 <Section_options_context_.Provider value={{set_show_section, show_section}}>

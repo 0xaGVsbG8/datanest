@@ -23,7 +23,8 @@ def test_redis():
     if not r_conn.get('USERS_DIR_DOWNLOAD_REQUESTS_DATA'):
         r_conn.set('USERS_DIR_DOWNLOAD_REQUESTS_DATA',json.dumps([]))
         
-        
+    if not r_conn.get('USER_UPLOAD_SIZE_CACHE'):
+        r_conn.set('USER_UPLOAD_SIZE_CACHE',json.dumps({}))
         
     print('redis is working', value)
     

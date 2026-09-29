@@ -97,6 +97,8 @@ async def view(websocket: WebSocket):
 
     if access_token:
         path = None
+        upload_user = None
+        upload_packsize = None
         print(access_token, '<-access token!')
         for record in manage_redis.read_upload_token_data_ls():
             if record['token'] == access_token: 
@@ -104,6 +106,8 @@ async def view(websocket: WebSocket):
                 path = record['path']
                 owner = record['owner']
                 parent_token = record['parent_token']
+                upload_user = record.get('user')
+                upload_packsize = record.get('packsize')
                 break
 
         if path:
@@ -257,8 +261,8 @@ async def view(websocket: WebSocket):
 
                                 if blank_item_alias in filepath and os.path.exists(filepath):
                                     os.remove(filepath)
-                                else:
-                                    item_token = register_item_in_db(db, filepath, owner, parent_token, 'file')
+                                # else:
+                                #     item_token = register_item_in_db(db, filepath, owner, parent_token, 'file')
 
                         
                                 await websocket.send_json({'registered': True})
@@ -358,6 +362,8 @@ async def view(websocket: WebSocket):
                             chunk = data.get('bytes')
                             await asyncio.to_thread(append_chunk, filepath, chunk)
                             PAYLOAD_SIZE+=len(chunk)
+                            # print(f"received byte {PAYLOAD_SIZE}", flush=True)
+                            
 
                         await websocket.send_json({'received': True})
 
@@ -377,6 +383,8 @@ async def view(websocket: WebSocket):
 
 
             finally:
+                if upload_user and upload_packsize:
+                    manage_redis.reclaim_user_cached_upload_size(upload_user, upload_packsize)
                 db.close()
     else:
         await websocket.close(code=4401)
