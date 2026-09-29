@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, Depends, BackgroundTasks, Request
 from fastapi.responses import Response
-from app_dependencies import SEND_MAILS, ROOT_EMAIL, ROOT_PASSWD, ALLOW_TEST_ACC_FOR_DEV_PURPOSES, TEST_ACC_FOR_DEV_PURPOSES
+from app_dependencies import SEND_MAILS, ROOT_EMAIL, ROOT_PASSWD, ALLOW_TEST_ACC_FOR_DEV_PURPOSES, TEST_ACC_FOR_DEV_PURPOSES, TEST_ACC_PASSWORD
 from sqlalchemy.orm import Session
 from views.models import User as model_user
 import bcrypt
@@ -40,6 +40,8 @@ async def view(request:Request, bg_tasks: BackgroundTasks, response: Response, u
 
     #If test account detected user just needs to refresh a page no need to authenticate with an email passcode        
     if ALLOW_TEST_ACC_FOR_DEV_PURPOSES and email == TEST_ACC_FOR_DEV_PURPOSES:
+        if userdata.password != TEST_ACC_PASSWORD:
+            return {"creds":"incorrect"}
 
         response.set_cookie(
             key = 'test_acc',

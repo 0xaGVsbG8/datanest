@@ -356,6 +356,8 @@ const Begin_upload = ({upload_token, call_for_begin_upload}:Begin_upload_props) 
             }
 
 
+            window.dispatchEvent(new Event('datanest-storage-changed'))
+
             const item_name = files[files.length-1].name.length > max_name_length ? files[files.length-1].name.slice(0, max_name_length) + '...' : files[files.length-1].name
             const msg = `Uploading: ${item_name} | ${files.length} item out of ${files.length} | ${'100.00'}%`
             

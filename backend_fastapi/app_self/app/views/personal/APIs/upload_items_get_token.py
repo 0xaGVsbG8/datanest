@@ -149,8 +149,7 @@ async def view(request: Request, userdata: userdata, background_tasks: Backgroun
             # print(msg)
             return {'upload_refused': True, 'err_title':'Upload refused','err_msg': msg}
     
-        print('insufficient space on users disk!')
-        # return {'result':'insufficient_space'}
+    return {'upload_refused': True, 'err_title':'Upload refused','err_msg': 'You have no access to upload here'}
 
 
 

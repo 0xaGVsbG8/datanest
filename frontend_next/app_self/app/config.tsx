@@ -6,7 +6,7 @@ const app_prefix = "";
 
 export const app_dir_name = "datanest/drive";
 
-export const doc_title: string = "dataNest";
+export { doc_title } from "./site";
 
 const one_zip_per_conn = false;
 

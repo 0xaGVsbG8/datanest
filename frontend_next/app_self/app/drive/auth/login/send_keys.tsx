@@ -66,6 +66,7 @@ const Send_keys = ({setMsg, call_send_keys, call_me, fetching}: Send_keys_props)
                 })
                 .then(data => {
                     let result=data
+                    
 
                     if(result.rate_limited){
                         setMsg("<span style='color:red'>Too many tries. Wait a minute and try again.</span>")
@@ -78,7 +79,9 @@ const Send_keys = ({setMsg, call_send_keys, call_me, fetching}: Send_keys_props)
                     if(result.auth_token){
                         set_auth_token(result.auth_token)
                         call_send_keys(c=>-1)
+                        return
                     }
+                    if(result.loged_in){window.location.reload()}
             })
         }finally{
             setTimeout(() => {

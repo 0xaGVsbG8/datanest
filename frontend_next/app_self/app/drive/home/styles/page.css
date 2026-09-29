@@ -84,12 +84,77 @@ button {
   opacity: 0.7;
 }
 
-#section-selector div:hover {
+#section-selector > div:not(.sidebar-storage):hover {
   background: rgba(59, 130, 246, 0.08);
   color: #e2e8f0;
 }
 #section-selector div:hover img {
   opacity: 1;
+}
+
+#section-selector .sidebar-storage {
+  margin-top: 0.75rem;
+  margin-bottom: 0;
+  padding: 0.75rem 0.35rem 0;
+  border-top: 1px solid rgba(148, 163, 184, 0.45);
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.35rem;
+  border-radius: 0;
+  background: transparent;
+}
+
+#section-selector .sidebar-storage {
+  cursor: default;
+  transition: none;
+}
+
+#section-selector .sidebar-storage div {
+  margin-top: 0;
+  padding: 0;
+  cursor: default;
+  border-radius: 0;
+  gap: 0;
+  transition: none;
+}
+
+#section-selector .sidebar-storage,
+#section-selector .sidebar-storage:hover,
+#section-selector .sidebar-storage * {
+  cursor: default !important;
+}
+
+#section-selector .sidebar-storage:hover {
+  background: transparent !important;
+  color: #94a3b8 !important;
+}
+
+.sidebar-storage-title {
+  font-weight: 600;
+  color: #cbd5e1;
+  font-size: 0.85rem;
+}
+
+.sidebar-storage-data {
+  color: #94a3b8;
+  font-size: 0.75rem;
+  line-height: 1.3;
+}
+
+.sidebar-storage-chart {
+  height: 0.45rem;
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.sidebar-storage-chart-filling {
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #3b82f6, #06b6d4);
 }
 
 /* ─── Content Area ─── */
@@ -100,7 +165,8 @@ button {
 
 #selection-panel {
   display: flex;
-  height: 80dvh;
+  flex: 1;
+  min-height: 0;
   background: #0f1219;
   gap: 0;
 }
@@ -176,6 +242,10 @@ button {
   }
   #section-selector div:first-child {
     font-size: 0.7rem;
+  }
+
+  #section-selector .sidebar-storage {
+    display: none;
   }
 
   .selected_section {

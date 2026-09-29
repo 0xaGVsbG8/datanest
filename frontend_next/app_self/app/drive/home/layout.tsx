@@ -1,5 +1,5 @@
 import { Metadata } from "next"
-import { doc_title } from "@/app/config"
+import { doc_title } from "@/app/site"
 import Layout_client from "./layout_client"
 
 export const metadata: Metadata = {

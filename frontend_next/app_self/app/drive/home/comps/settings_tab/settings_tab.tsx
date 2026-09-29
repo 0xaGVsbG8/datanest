@@ -147,6 +147,9 @@ const Settings_tab = ({set_show_settings_tab, show_settings_tab}:settings_tab_pr
 
     useEffect(()=>{
         get_user_info()
+        const refresh = () => { pulling_data.current = false; get_user_info() }
+        window.addEventListener('datanest-storage-changed', refresh)
+        return () => window.removeEventListener('datanest-storage-changed', refresh)
     },[])
 
 

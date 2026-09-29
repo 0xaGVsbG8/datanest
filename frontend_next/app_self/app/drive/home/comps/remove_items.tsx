@@ -95,6 +95,7 @@ const Remove_items = ({index, show, route_token, multiple = false, predefined_da
             
         }else{window.location.reload();return}
         const records_name = data.deleted
+        window.dispatchEvent(new Event('datanest-storage-changed'))
         set_fetched_data(prev=>{
             if(!prev) return prev
 

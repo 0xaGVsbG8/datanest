@@ -133,12 +133,12 @@ const View = () =>{
             </main>
         </div>}
         {send_keys ? 
-            <Send_keys 
-                setMsg = {set_msg} 
-                call_me={send_keys} 
-                call_send_keys = {call_send_keys} 
-                fetching={fetching}>
-            </Send_keys>
+            <Send_keys
+                setMsg={set_msg}
+                call_me={send_keys}
+                call_send_keys={call_send_keys}
+                fetching={fetching}
+            />
         : null}
         
     </>

@@ -23,8 +23,9 @@ SENDER_EMAIL = "fuzzdisk@gmail.com"
 SENDER_EMAIL_PASSWORD = "avhi wyig ptvo mthg" #Gmail account app code
  
 
-ALLOW_TEST_ACC_FOR_DEV_PURPOSES = True # allows a dev | regular user to log in as temp@gmail.com and with any password without checking db and etc...
+ALLOW_TEST_ACC_FOR_DEV_PURPOSES = True # allows login as temp@gmail.com with TEST_ACC_PASSWORD, skipping the email passcode
 TEST_ACC_FOR_DEV_PURPOSES = 'temp@gmail.com'
+TEST_ACC_PASSWORD = 'qwerty'
 
 
 

@@ -64,7 +64,7 @@ async def view(request: Request, db: Session = Depends(get_db)):
         
         print('user is asking for his info!', max_storage_per_account, real_used_storage)
 
-        usage_perc = round((real_used_storage / real_max_storage_per_account),2)
+        usage_perc = round((real_used_storage / real_max_storage_per_account) * 100)
 
         if usage_perc == 0:
             usage_perc = '>1'

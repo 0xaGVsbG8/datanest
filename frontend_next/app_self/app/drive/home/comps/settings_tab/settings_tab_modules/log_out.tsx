@@ -51,6 +51,7 @@ const Log_out_mod = () => {
             content_msg: `Are you sure that you want to be loged out?`,
             confirm_btn_className: 'op_confirmation_tab-del-btn',
             confirm_btn_content: 'Confirm',
+            show_cancel_btn: true,
             confirm_behaviour: ()=>{hide_me();send_log_out()},
             cancel_behaviour: ()=>{hide_me()}
         }))
