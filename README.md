@@ -1,4 +1,5 @@
 # DataNest
+Live-demo: https://berkehut.ddns.net/datanest/drive/home/me
 
 Self-hosted file storage: Next.js frontend, FastAPI backend, PostgreSQL, Nginx. Run it with Docker Compose. Put a TLS reverse proxy on 443 in front of port 9000 for HTTPS.
 
