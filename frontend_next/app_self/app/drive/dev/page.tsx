@@ -29,7 +29,7 @@ const View = () => {
                     <div id="dev-dashboard-top">
                         <div id="dev-dashboard-title">
                             <a>Dev Dashboard</a>
-                            <span>Dev's view - managing storage and users...</span>
+                            <span>Dev's view - managing storage and users</span>
                         </div>
                         <button id="dev-dashboard-home-btn" onClick={()=>window.open('/datanest/drive/home/me','_self')}>Go back to home</button>
                     </div>
