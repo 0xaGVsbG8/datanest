@@ -27,7 +27,7 @@ async def view(request:Request, bg_tasks: BackgroundTasks, userdata: register_da
     if too_many_requests(request, 'register'):
         return {'rate_limited': True}
 
-    email = userdata.email
+    email = str(userdata.email).strip().lower()
     exists = db.query(model_user).filter(model_user.email==email).first()
     if exists:
         return {'already_exists': True}
