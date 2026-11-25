@@ -36,7 +36,8 @@ async def view(request:Request, bg_tasks: BackgroundTasks, response: Response, u
     if too_many_requests(request, 'login'):
         return {'rate_limited': True}
 
-    email = userdata.email
+    # email = userdata.email
+    email = str(userdata.email).strip().lower()
 
     #If test account detected user just needs to refresh a page no need to authenticate with an email passcode        
     if ALLOW_TEST_ACC_FOR_DEV_PURPOSES and email == TEST_ACC_FOR_DEV_PURPOSES:
