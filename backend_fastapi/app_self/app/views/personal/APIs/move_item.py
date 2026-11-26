@@ -9,7 +9,7 @@ from db_conn import get_db
 from views.models import ITEMINFO, shared_items
 import os, shutil
 from sqlalchemy import and_
-from modules import find_new_item_path, justify_path_for_db
+from modules import find_new_item_path, justify_path_for_db, manage_redis
 from views.personal.APIs.get_share_info import find_closest_record_parent
 from typing import cast
 import time
@@ -26,8 +26,8 @@ class RESPONSE(BaseModel):
     result: bool
 
 
-in_change = set()
-
+# in_change = set()
+InChange = manage_redis.InChange()
 
 
 @router.post('/sec/move-item/')
@@ -72,9 +72,7 @@ async def view(request: Request, userdata: userdata, db : Session = Depends(get_
 
                         try:
                             #prevents user from asking for moving an item while the previous one is not done
-                            if old_path not in in_change:
-                                in_change.add(old_path)
-                            else:
+                            if not InChange.dump(old_path):
                                 continue
                             
                             try:
@@ -110,7 +108,7 @@ async def view(request: Request, userdata: userdata, db : Session = Depends(get_
                                     db.add(new_record)
 
                             finally:    
-                                in_change.remove(old_path)
+                                InChange.remove(old_path)
 
 
                         except shutil.Error:
