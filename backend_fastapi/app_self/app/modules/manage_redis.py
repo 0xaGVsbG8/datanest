@@ -5,6 +5,7 @@ import asyncio
 from . import get_user
 import time
 
+# TODO: MOVE ALL FUNCTIONS TO CLASSES FOR BETTER MANAGEMENT AND READABILITY
 
 def rate_limit_exceeded(key: str, limit: int, window_secs: int) -> bool:
     redis_key = f'rl:{key}'
@@ -15,6 +16,70 @@ def rate_limit_exceeded(key: str, limit: int, window_secs: int) -> bool:
 
 #IN CASE CLEAN UP DOESNT WORK CORRECTLY
 RESET_CACHE_AFTER = 12 * 60 * 60 #(hours)
+
+
+
+
+
+
+class InChange:
+
+    def dump(self, path: str):
+        while True:
+            try:
+                with r_conn.pipeline() as pipe:
+                    pipe.watch("in_change")
+
+                    current_data = pipe.get("in_change")
+                    data = json.loads(current_data) if current_data else []
+
+                    if path in data:
+                        return False
+
+                    data.append(path)
+
+                    pipe.multi()
+                    pipe.set("in_change", json.dumps(data))
+                    pipe.execute()
+
+                return True
+
+            except redis.WatchError:
+                continue
+
+    def remove(self, path: str):
+        while True:
+            try:
+                with r_conn.pipeline() as pipe:
+                    pipe.watch("in_change")
+
+                    current_data = pipe.get("in_change")
+                    data = json.loads(current_data) if current_data else []
+
+                    if path not in data:
+                        return False
+
+                    data.remove(path)
+
+                    pipe.multi()
+                    pipe.set("in_change", json.dumps(data))
+                    pipe.execute()
+
+                return True
+
+            except redis.WatchError:
+                continue
+
+    def read(self):
+        current_data = r_conn.get("in_change")
+        return json.loads(current_data) if current_data else []
+
+
+
+
+
+
+
 
 
 def dump_upload_token_data(token_data: dict):
