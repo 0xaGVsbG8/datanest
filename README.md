@@ -140,8 +140,4 @@ docker compose up -d --build fastapi_backend
 docker compose up -d --build nginx-app-proxy
 ```
 
-## Notes
 
-- Dev routes (`/dev/` in the URL) require `users.isDev`.
-- Redis is in `requirements.txt` but sessions are in Postgres, not Redis.
-- Do not commit real Gmail app passwords or root passwords; keep them out of git.
