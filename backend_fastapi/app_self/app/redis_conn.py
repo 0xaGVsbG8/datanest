@@ -26,5 +26,8 @@ def test_redis():
     if not r_conn.get('USER_UPLOAD_SIZE_CACHE'):
         r_conn.set('USER_UPLOAD_SIZE_CACHE',json.dumps({}))
         
+    if not r_conn.get('in_change'):
+        r_conn.set('in_change',json.dumps([]))
+        
     print('redis is working', value)
     
