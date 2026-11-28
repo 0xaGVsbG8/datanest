@@ -282,9 +282,17 @@ async def view(websocket: WebSocket):
                                                 db.delete(record)
                                     except Exception as e:
                                         pass
-                                if upload_user and upload_packsize and not upload_cache_reclaimed:
-                                    manage_redis.reclaim_user_cached_upload_size(upload_user, upload_packsize)
+                                if upload_user and upload_packsize is not None and not upload_cache_reclaimed:
+                                    remaining = max(0, upload_packsize - PAYLOAD_SIZE)
+
+                                    manage_redis.reclaim_user_cached_upload_size(
+                                        upload_user,
+                                        remaining
+                                    )
+
                                     upload_cache_reclaimed = True
+                                    
+                                    
                                 db.close()
                                 break
 
