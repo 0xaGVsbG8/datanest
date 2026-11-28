@@ -5,7 +5,7 @@ from fastapi.websockets import WebSocket, WebSocketDisconnect
 from sqlalchemy.orm import Session
 from db_conn import get_db
 from views.models import ITEMINFO, shared_items
-from modules import format_size, guess_file_type, format_time_diff
+from modules import format_size, guess_file_type, format_time_diff, manage_redis
 from modules.format_size import get_folder_size
 import uuid
 import asyncio
@@ -357,7 +357,6 @@ async def view(websocket: WebSocket):
                         except json.JSONDecodeError as e:
                             pass
 
-
                     if data.get('bytes'):
 
                         if blank_item_alias in filepath and os.path.exists(filepath):
@@ -365,6 +364,7 @@ async def view(websocket: WebSocket):
                         else:
                             chunk = data.get('bytes')
                             await asyncio.to_thread(append_chunk, filepath, chunk)
+                            manage_redis.reclaim_user_cached_upload_size(upload_user, len(chunk))
                             PAYLOAD_SIZE+=len(chunk)
                             # print(f"received byte {PAYLOAD_SIZE}", flush=True)
                             

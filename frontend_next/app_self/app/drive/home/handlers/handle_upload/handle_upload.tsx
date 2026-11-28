@@ -37,13 +37,13 @@ const Handle_upload_comp = ({path_token}:Handle_upload_comp_props) => {
         
         if(!target.files) return
 
-        const selected_files = Array.from(target.files)
-        const selection_key = selected_files.map(file => `${file.name}:${file.size}:${file.lastModified}`).join('|')
-        if(last_input_selection_key.current === selection_key) return
-        last_input_selection_key.current = selection_key
+        //const selected_files = Array.from(target.files)
+        //const selection_key = selected_files.map(file => `${file.name}:${file.size}:${file.lastModified}`).join('|')
+        //if(last_input_selection_key.current === selection_key) return
+        //last_input_selection_key.current = selection_key
 
-        setUserFileList(selected_files)
-
+        //setUserFileList(selected_files)
+	setUserFileList(Array.from(target.files))
         set_call_ask_for_upload_token(c=>c+1)
 
 

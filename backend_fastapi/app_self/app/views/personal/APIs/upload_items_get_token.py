@@ -51,6 +51,8 @@ async def view(request: Request, userdata: userdata, background_tasks: Backgroun
     path = False
     OWNER = None
 
+    await asyncio.sleep(0.5)
+
     if userdata.filter_by == 'off':
         if userdata.path_token == 'main':
             path = os.path.join(__STORAGE_VAULT_PATH, user)
@@ -100,9 +102,17 @@ async def view(request: Request, userdata: userdata, background_tasks: Backgroun
                 
                 
                 USER_CACHED_UPLOAD_SIZE = manage_redis.get_user_cached_upload_size(user)
-                if USER_CACHED_UPLOAD_SIZE + userdata.packsize > (max_storage_per_acc - acc_dir_size):
+                if USER_CACHED_UPLOAD_SIZE + userdata.packsize > (max_storage_per_acc - acc_dir_size ):
                     print('uploades in que exceed total avaible space left')
-                    storage_left = max(0, max_storage_per_acc - acc_dir_size)
+                    print({
+                    "disk_size_gb": acc_dir_size / 1024**3,
+                    "cached_size_gb": USER_CACHED_UPLOAD_SIZE / 1024**3,
+                    "new_upload_gb": userdata.packsize / 1024**3,
+                    "storage_limit_gb": max_storage_per_acc / 1024**3,
+                    "available_gb": (max_storage_per_acc - acc_dir_size) / 1024**3,
+                    "total_reserved_gb": (USER_CACHED_UPLOAD_SIZE + userdata.packsize) / 1024**3,
+                })
+                    storage_left = max(0, max_storage_per_acc - (acc_dir_size + USER_CACHED_UPLOAD_SIZE))
                     msg = f"""
                     Uploades in que exceed total avaible space left on this account,
                     This upload: {userdata.packsize / (1024*1024):.2f}MBs,
