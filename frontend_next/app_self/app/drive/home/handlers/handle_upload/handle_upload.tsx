@@ -22,6 +22,7 @@ const Handle_upload_comp = ({path_token}:Handle_upload_comp_props) => {
     const [call_for_begin_upload, set_call_for_begin_upload] = useState<number>(0)
     const asked_for_token = useRef<boolean>(false)
     const packsize_ref = useRef<number>(0)
+    const last_input_selection_key = useRef<string>('')
 
 
     const handle_upload_from_inputs = (e:Event) => {
@@ -36,7 +37,12 @@ const Handle_upload_comp = ({path_token}:Handle_upload_comp_props) => {
         
         if(!target.files) return
 
-        setUserFileList(Array.from(target.files))
+        const selected_files = Array.from(target.files)
+        const selection_key = selected_files.map(file => `${file.name}:${file.size}:${file.lastModified}`).join('|')
+        if(last_input_selection_key.current === selection_key) return
+        last_input_selection_key.current = selection_key
+
+        setUserFileList(selected_files)
 
         set_call_ask_for_upload_token(c=>c+1)
 
@@ -67,7 +73,12 @@ const Handle_upload_comp = ({path_token}:Handle_upload_comp_props) => {
 
 
             const dirReader = item.createReader();
-            const entries: any[] = await new Promise(resolve => dirReader.readEntries(resolve));
+            const entries: any[] = []
+            while (true) {
+                const batch: any[] = await new Promise(resolve => dirReader.readEntries(resolve));
+                if (!batch.length) break
+                entries.push(...batch)
+            }
             for (const entry of entries) {
             await traverseFileTree(entry, dirPath);
             }
