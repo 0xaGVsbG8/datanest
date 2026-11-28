@@ -49,6 +49,7 @@ const Begin_upload = ({upload_token, call_for_begin_upload}:Begin_upload_props) 
     const ws_ref = useRef<WebSocket | null>(null)
 
     const begin_upload_timeout = useRef<boolean>(false)
+    const last_started_upload_key = useRef<string>('')
 
 
     const connection_lost_pop_up = () => {
@@ -173,6 +174,7 @@ const Begin_upload = ({upload_token, call_for_begin_upload}:Begin_upload_props) 
             amount: number, 
             saved_progress: React.MutableRefObject<number>, 
             total_size:number, 
+            operation_index: number,
         ): Promise<upload_result>{
             let offset = 0
             let perc: number|string = 0
@@ -187,7 +189,7 @@ const Begin_upload = ({upload_token, call_for_begin_upload}:Begin_upload_props) 
                 }
                 set_coms(prev=>{
                     const newComs = {...prev}
-                    delete newComs[operations_count]
+                    delete newComs[operation_index]
                     return newComs
                 })
                 set_operations_count(c=>c-1)
@@ -227,7 +229,8 @@ const Begin_upload = ({upload_token, call_for_begin_upload}:Begin_upload_props) 
                 
                 offset += CHUNK_SIZE
                 saved_progress.current += chunk.size
-                perc = ((saved_progress.current / total_size) * 100).toFixed(2)
+                const normalized_progress = total_size > 0 ? Math.min(saved_progress.current, total_size) : 0
+                perc = (total_size > 0 ? (normalized_progress / total_size) * 100 : 0).toFixed(2)
 
                 const item_name = target.name.length > max_name_length ? target.name.slice(0, max_name_length) + '...' : target.name
 
@@ -238,19 +241,18 @@ const Begin_upload = ({upload_token, call_for_begin_upload}:Begin_upload_props) 
                     update_ui = false
                     set_coms(prev=>({
                         ...prev,
-                        [operations_count]:[msg as string, ()=>{
+                        [operation_index]:[msg as string, ()=>{
+                            cancel_func()
+                        }],
+                    }))
+                }else{
+                    set_coms(prev=>({
+                        ...prev,
+                        [operation_index]:[msg as string, ()=>{
                             cancel_func()
                         }],
                     }))
                 }
-
-                const ops_array = document.querySelectorAll<HTMLDivElement>('.Operations_tab_record_msg')
-                setTimeout(() => {
-                    if(ops_array[operations_count]){
-                        const msg_block = ops_array[operations_count]
-                        msg_block.innerHTML = msg
-                    }
-                }, 50);
             
                 
                 await this.waitForReply()
@@ -294,11 +296,22 @@ const Begin_upload = ({upload_token, call_for_begin_upload}:Begin_upload_props) 
 
 
             const files = Array.from(UserFileList)
+            const upload_session_key = `${upload_token}::${call_for_begin_upload}::${files.length}::${files.map(file => `${file.name}:${file.size}:${file.lastModified}`).join('|')}`
+            if(last_started_upload_key.current === upload_session_key){
+                uploading_ref.current = false
+                if(UPLOADER_Worker_inst.isOpen()){
+                    UPLOADER_Worker_inst.ws.close()
+                }
+                return
+            }
+            last_started_upload_key.current = upload_session_key
 
             
+            saved_progress.current = 0
+            const operation_index = operations_tab_context.operations_count
             if(files) set_operations_count(c=>c+1)
 
-            const here_packsize: number =  packsize_ref.current
+            const here_packsize: number = files.reduce((total, item) => total + item.size, 0)
             packsize_ref.current = 0
 
             for(const [id, item] of files.entries()){
@@ -312,7 +325,7 @@ const Begin_upload = ({upload_token, call_for_begin_upload}:Begin_upload_props) 
 
 
                 await UPLOADER_Worker_inst.register_file(filtered_bare_name,rel_name, item.size, rel_included)
-                const {received_saved_progress, received_data} = await UPLOADER_Worker_inst.upload_file(item, id+1, files.length, saved_progress, here_packsize)
+                const {received_saved_progress, received_data} = await UPLOADER_Worker_inst.upload_file(item, id+1, files.length, saved_progress, here_packsize, operation_index)
                 saved_progress.current = received_saved_progress
 
 
@@ -364,7 +377,7 @@ const Begin_upload = ({upload_token, call_for_begin_upload}:Begin_upload_props) 
             setTimeout(() => {
                 operations_tab_context.set_coms(prev=>({
                     ...prev,
-                    [operations_tab_context.operations_count]:[msg as string, ()=>{
+                    [operation_index]:[msg as string, ()=>{
                     }],
                 }))
             }, 150);

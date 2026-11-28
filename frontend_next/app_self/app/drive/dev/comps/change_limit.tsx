@@ -15,7 +15,6 @@ type Change_limit_props = {
 
 const Change_limit = ({set_show_change_limit, limit_what}: Change_limit_props) => {
 
-    const mounted = useRef<boolean>(false)
     const fetching = useRef<boolean>(false)
     const user_value = useRef<number>(0)
     const {set_repull_data} = useContext(repull_data_context_)
@@ -28,18 +27,24 @@ const Change_limit = ({set_show_change_limit, limit_what}: Change_limit_props) =
         if(fetching.current || user_value.current <= 0) return
         
         fetching.current = true
-        const response = await fetch(base_fetch_url+`/dev/update_acc_limit/?limit=${user_value.current}&set_what=${limit_what}`,{
-            method:'GET',
-            credentials:'include',
-            headers:{
-                "Content-Type": "application/json",
-                "protocol":"init"
-            },
-           
-        })
-        const data = await response.json()
-        if(data.result) set_show_change_limit(false);set_repull_data(c=>c+1)
-        fetching.current= false
+        try{
+            const response = await fetch(base_fetch_url+`/dev/update_acc_limit/?limit=${user_value.current}&set_what=${limit_what}`,{
+                method:'GET',
+                credentials:'include',
+                headers:{
+                    "Content-Type": "application/json",
+                    "protocol":"init"
+                },
+            })
+
+            const data = await response.json()
+            if(data.result) {
+                set_show_change_limit(false)
+                set_repull_data(c=>c+1)
+            }
+        }finally{
+            fetching.current= false
+        }
             
 
     }
@@ -50,7 +55,7 @@ const Change_limit = ({set_show_change_limit, limit_what}: Change_limit_props) =
         if(!root) return
         set_portal_root(root)
         setTimeout(() => {
-            document.getElementById('change-limit-tab-input')!.focus()
+            document.getElementById('change-limit-tab-input-input')?.focus()
         }, 120);
     },[])
 
@@ -76,8 +81,7 @@ const Change_limit = ({set_show_change_limit, limit_what}: Change_limit_props) =
         block_cont()
 
         return () => {
-            if(mounted.current) {unblock_cont()}
-            else mounted.current = true
+            unblock_cont()
         }
 
     },[])
@@ -88,7 +92,7 @@ const Change_limit = ({set_show_change_limit, limit_what}: Change_limit_props) =
     return (
         <>
             {portal_root && createPortal(<div id="change-limit-tab">
-                <div id="change-limit-tab-title"><h2>Set a new account limit (GB)</h2></div>
+                <div id="change-limit-tab-title"><h2>{limit_what === 'account' ? 'Set a new account limit (GB)' : 'Set a new upload limit (GB)'}</h2></div>
                 <div id="change-limit-tab-input">
                     <input placeholder="_" type='number' id='change-limit-tab-input-input' onChange={(e)=>user_value.current = parseFloat(e.target.value)}></input>
                 </div>
