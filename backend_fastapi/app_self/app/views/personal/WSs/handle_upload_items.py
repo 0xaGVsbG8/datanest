@@ -99,6 +99,7 @@ async def view(websocket: WebSocket):
         path = None
         upload_user = None
         upload_packsize = None
+        upload_cache_reclaimed = False
         print(access_token, '<-access token!')
         for record in manage_redis.read_upload_token_data_ls():
             if record['token'] == access_token: 
@@ -281,6 +282,9 @@ async def view(websocket: WebSocket):
                                                 db.delete(record)
                                     except Exception as e:
                                         pass
+                                if upload_user and upload_packsize and not upload_cache_reclaimed:
+                                    manage_redis.reclaim_user_cached_upload_size(upload_user, upload_packsize)
+                                    upload_cache_reclaimed = True
                                 db.close()
                                 break
 
@@ -383,7 +387,7 @@ async def view(websocket: WebSocket):
 
 
             finally:
-                if upload_user and upload_packsize:
+                if upload_user and upload_packsize and not upload_cache_reclaimed:
                     manage_redis.reclaim_user_cached_upload_size(upload_user, upload_packsize)
                 db.close()
     else:

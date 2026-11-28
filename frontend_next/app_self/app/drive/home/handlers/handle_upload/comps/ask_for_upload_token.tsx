@@ -63,15 +63,8 @@ const Ask_for_upload_token = ({ call_ask_for_upload_token, path_token, files}:As
 
 
 
-        let packsize:number = 0
-            
-
-        for(const item of files){
-            packsize_ref.current+=item.size
-        }
-
-        packsize = packsize_ref.current
-        // packsize_ref.current = 0
+        const packsize = files.reduce((total, item) => total + item.size, 0)
+        packsize_ref.current = packsize
         
 
         try{

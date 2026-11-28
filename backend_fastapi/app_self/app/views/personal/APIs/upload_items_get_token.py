@@ -102,11 +102,12 @@ async def view(request: Request, userdata: userdata, background_tasks: Backgroun
                 USER_CACHED_UPLOAD_SIZE = manage_redis.get_user_cached_upload_size(user)
                 if USER_CACHED_UPLOAD_SIZE + userdata.packsize > max_storage_per_acc:
                     print('uploades in que exceed total avaible space left')
+                    storage_left = max(0, max_storage_per_acc - acc_dir_size - USER_CACHED_UPLOAD_SIZE)
                     msg = f"""
                     Uploades in que exceed total avaible space left on this account,
                     This upload: {userdata.packsize / (1024*1024):.2f}MBs,
                     Uploads in que: {USER_CACHED_UPLOAD_SIZE / (1024*1024):.2f}MBs,
-                    Your storage left: {((max_storage_per_acc - acc_dir_size)) / (1024*1024):.2f}MBs.
+                    Your storage left: {(storage_left) / (1024*1024):.2f}MBs.
                     """
                     return {'upload_refused': True, 'err_title':'Upload refused','err_msg': msg}
                 

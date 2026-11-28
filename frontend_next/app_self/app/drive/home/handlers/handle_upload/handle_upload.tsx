@@ -178,7 +178,7 @@ const Handle_upload_comp = ({path_token}:Handle_upload_comp_props) => {
             }}>
 
                 {call_ask_for_upload_token != 0 && UserFileList && <Ask_for_upload_token call_ask_for_upload_token={call_ask_for_upload_token} files={UserFileList} path_token={path_token}></Ask_for_upload_token>}
-                {received_token !== null && <Begin_upload upload_token = {received_token} call_for_begin_upload={call_for_begin_upload}></Begin_upload>}
+                {received_token !== null && <Begin_upload key={`${received_token}-${call_for_begin_upload}`} upload_token = {received_token} call_for_begin_upload={call_for_begin_upload}></Begin_upload>}
             
             </handle_upload_common_context.Provider>
         </>

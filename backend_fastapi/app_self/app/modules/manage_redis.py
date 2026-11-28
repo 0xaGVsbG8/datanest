@@ -131,10 +131,10 @@ async def drop_upload_token_data(token, delay:int = 60):
                     data = json.loads(current_data)
                 else:
                     data = []
-                    
-                    
+                removed_record = None
                 for index,record in enumerate(data):
                     if record['token'] == token:
+                        removed_record = record
                         data.pop(index)
                         break
 
@@ -146,6 +146,12 @@ async def drop_upload_token_data(token, delay:int = 60):
                 )
 
                 pipe.execute()
+
+            if removed_record:
+                user = removed_record.get('user')
+                packsize = removed_record.get('packsize')
+                if user and packsize:
+                    reclaim_user_cached_upload_size(user, packsize)
 
             break
 
@@ -301,7 +307,7 @@ def reclaim_user_cached_upload_size(user, packsize, reset_cache = False):
                     if reset_cache:
                         del data[user]
                     else:
-                        data[user]['packsize'] -= packsize if packsize > 0 else 0
+                        data[user]['packsize'] = max(0, data[user]['packsize'] - (packsize if packsize > 0 else 0))
                     print('space reclaimed')
                     
                 pipe.multi()

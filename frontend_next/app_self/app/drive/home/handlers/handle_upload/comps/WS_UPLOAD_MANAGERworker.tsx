@@ -40,7 +40,7 @@ const Begin_upload = ({upload_token, call_for_begin_upload}:Begin_upload_props) 
     const operations_tab_context = useContext(operations_tab_context_)
     const {set_fetched_data} = useContext(fetched_data_context_)
     const token_ls = useContext(token_ls_context)
-    const {UserFileList, packsize_ref} = useContext(handle_upload_common_context)
+    const {UserFileList, packsize_ref, set_received_token} = useContext(handle_upload_common_context)
     const Op_confirmation_tab_context = useContext(Op_confirmation_tab_context_)
     const connected = useRef<boolean>(false)
     const saved_progress = useRef<number>(0)
@@ -201,7 +201,6 @@ const Begin_upload = ({upload_token, call_for_begin_upload}:Begin_upload_props) 
                 }
                 uploading_ref.current = false
                 update_ui = false
-                window.location.reload()   
 
             }
 
@@ -214,8 +213,10 @@ const Begin_upload = ({upload_token, call_for_begin_upload}:Begin_upload_props) 
                     show_confirmation_tab: true,
                     content_msg: 'Are you sure that you want to cancel an upload?',
                     confirm_btn_className: 'op_confirmation_tab-del-btn',
-                    confirm_btn_content: 'Cancel',
+                    confirm_btn_content: 'Confirm',
+                    show_cancel_btn: true,
                     confirm_behaviour: ()=>cancel_upload(),
+                    cancel_behaviour: ()=>{},
                 }))
             }
 
@@ -385,6 +386,7 @@ const Begin_upload = ({upload_token, call_for_begin_upload}:Begin_upload_props) 
             
 
             uploading_ref.current = false
+            set_received_token(null)
             if(UPLOADER_Worker_inst.isOpen()){
                 UPLOADER_Worker_inst.ws.close()
             }
@@ -392,6 +394,7 @@ const Begin_upload = ({upload_token, call_for_begin_upload}:Begin_upload_props) 
             if(uploading_ref.current){
                 connection_lost_pop_up()
             }
+            set_received_token(null)
             if(ws_ref.current && (ws_ref.current.readyState === WebSocket.OPEN || ws_ref.current.readyState === WebSocket.CONNECTING)){
                 ws_ref.current.close()
             }
